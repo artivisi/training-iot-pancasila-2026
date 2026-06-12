@@ -1,0 +1,6 @@
+.DS_Store
+*.bin
+*.elf
+build/
+.vscode/
+secrets.h
