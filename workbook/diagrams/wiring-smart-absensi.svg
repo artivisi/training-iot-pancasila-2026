@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 820" font-family="Helvetica, Arial, sans-serif">
+<rect width="1200" height="820" fill="#ffffff"/>
+<text x="600.0" y="40" text-anchor="middle" font-size="22" font-weight="800" fill="#1e3a8a">Wiring Lab Smart Absensi</text>
+<text x="600.0" y="66" text-anchor="middle" font-size="13" fill="#64748b">ESP32 + RC522 (SPI) + OLED (I2C) -&gt; Buzzer + LED</text>
+<path d="M 250 197.0 C 349.0 197.0 371.0 240.0 470 240.0" fill="none" stroke="#2563eb" stroke-width="3.0" stroke-linecap="round"/>
+<path d="M 250 223.0 C 349.0 223.0 371.0 311.6666666666667 470 311.6666666666667" fill="none" stroke="#2563eb" stroke-width="3.0" stroke-linecap="round"/>
+<path d="M 250 249.0 C 349.0 249.0 371.0 383.33333333333337 470 383.33333333333337" fill="none" stroke="#2563eb" stroke-width="3.0" stroke-linecap="round"/>
+<path d="M 250 275.0 C 349.0 275.0 371.0 455.0 470 455.0" fill="none" stroke="#2563eb" stroke-width="3.0" stroke-linecap="round"/>
+<path d="M 250 301.0 C 349.0 301.0 371.0 526.6666666666667 470 526.6666666666667" fill="none" stroke="#2563eb" stroke-width="3.0" stroke-linecap="round"/>
+<path d="M 250 327.0 C 349.0 327.0 371.0 598.3333333333334 470 598.3333333333334" fill="none" stroke="#ea580c" stroke-width="3.0" stroke-linecap="round"/>
+<path d="M 250 353.0 C 349.0 353.0 371.0 670.0 470 670.0" fill="none" stroke="#334155" stroke-width="3.0" stroke-linecap="round"/>
+<path d="M 950 197.0 C 851.0 197.0 829.0 598.3333333333334 730 598.3333333333334" fill="none" stroke="#ea580c" stroke-width="3.0" stroke-linecap="round"/>
+<path d="M 950 223.0 C 851.0 223.0 829.0 670.0 730 670.0" fill="none" stroke="#334155" stroke-width="3.0" stroke-linecap="round"/>
+<path d="M 950 249.0 C 851.0 249.0 829.0 240.0 730 240.0" fill="none" stroke="#0891b2" stroke-width="3.0" stroke-linecap="round"/>
+<path d="M 950 275.0 C 851.0 275.0 829.0 311.6666666666667 730 311.6666666666667" fill="none" stroke="#0891b2" stroke-width="3.0" stroke-linecap="round"/>
+<path d="M 950 407.0 C 851.0 407.0 829.0 383.33333333333337 730 383.33333333333337" fill="none" stroke="#16a34a" stroke-width="3.0" stroke-linecap="round"/>
+<path d="M 950 433.0 C 851.0 433.0 829.0 455.0 730 455.0" fill="none" stroke="#9333ea" stroke-width="3.0" stroke-linecap="round"/>
+<path d="M 950 459.0 C 851.0 459.0 829.0 670.0 730 670.0" fill="none" stroke="#334155" stroke-width="3.0" stroke-linecap="round"/>
+<path d="M 950 587.0 C 851.0 587.0 829.0 526.6666666666667 730 526.6666666666667" fill="none" stroke="#16a34a" stroke-width="3.0" stroke-linecap="round"/>
+<path d="M 950 613.0 C 851.0 613.0 829.0 670.0 730 670.0" fill="none" stroke="#334155" stroke-width="3.0" stroke-linecap="round"/>
+<rect x="470" y="150" width="260" height="550" rx="14" fill="#0f172a" stroke="#1e3a8a" stroke-width="2"/>
+<text x="600.0" y="184" text-anchor="middle" fill="#e2e8f0" font-size="17" font-weight="700">ESP32 DevKit V1</text>
+<rect x="578.0" y="198" width="44" height="14" rx="3" fill="#1e3a8a"/>
+<text x="600.0" y="209" text-anchor="middle" fill="#94a3b8" font-size="9">USB</text>
+<rect x="463" y="231.0" width="14" height="18" rx="3" fill="#2563eb"/>
+<text x="484" y="244.0" text-anchor="start" fill="#e2e8f0" font-size="12.5" font-weight="600">GPIO5 (SS)</text>
+<rect x="463" y="302.6666666666667" width="14" height="18" rx="3" fill="#2563eb"/>
+<text x="484" y="315.6666666666667" text-anchor="start" fill="#e2e8f0" font-size="12.5" font-weight="600">GPIO18 (SCK)</text>
+<rect x="463" y="374.33333333333337" width="14" height="18" rx="3" fill="#2563eb"/>
+<text x="484" y="387.33333333333337" text-anchor="start" fill="#e2e8f0" font-size="12.5" font-weight="600">GPIO23 (MOSI)</text>
+<rect x="463" y="446.0" width="14" height="18" rx="3" fill="#2563eb"/>
+<text x="484" y="459.0" text-anchor="start" fill="#e2e8f0" font-size="12.5" font-weight="600">GPIO19 (MISO)</text>
+<rect x="463" y="517.6666666666667" width="14" height="18" rx="3" fill="#2563eb"/>
+<text x="484" y="530.6666666666667" text-anchor="start" fill="#e2e8f0" font-size="12.5" font-weight="600">GPIO4 (RST)</text>
+<rect x="463" y="589.3333333333334" width="14" height="18" rx="3" fill="#ea580c"/>
+<text x="484" y="602.3333333333334" text-anchor="start" fill="#e2e8f0" font-size="12.5" font-weight="600">3V3</text>
+<rect x="463" y="661.0" width="14" height="18" rx="3" fill="#334155"/>
+<text x="484" y="674.0" text-anchor="start" fill="#e2e8f0" font-size="12.5" font-weight="600">GND</text>
+<rect x="723" y="231.0" width="14" height="18" rx="3" fill="#0891b2"/>
+<text x="716" y="244.0" text-anchor="end" fill="#e2e8f0" font-size="12.5" font-weight="600">GPIO21 (SDA)</text>
+<rect x="723" y="302.6666666666667" width="14" height="18" rx="3" fill="#0891b2"/>
+<text x="716" y="315.6666666666667" text-anchor="end" fill="#e2e8f0" font-size="12.5" font-weight="600">GPIO22 (SCL)</text>
+<rect x="723" y="374.33333333333337" width="14" height="18" rx="3" fill="#16a34a"/>
+<text x="716" y="387.33333333333337" text-anchor="end" fill="#e2e8f0" font-size="12.5" font-weight="600">GPIO25</text>
+<rect x="723" y="446.0" width="14" height="18" rx="3" fill="#9333ea"/>
+<text x="716" y="459.0" text-anchor="end" fill="#e2e8f0" font-size="12.5" font-weight="600">GPIO26</text>
+<rect x="723" y="517.6666666666667" width="14" height="18" rx="3" fill="#16a34a"/>
+<text x="716" y="530.6666666666667" text-anchor="end" fill="#e2e8f0" font-size="12.5" font-weight="600">GPIO27</text>
+<rect x="723" y="589.3333333333334" width="14" height="18" rx="3" fill="#ea580c"/>
+<text x="716" y="602.3333333333334" text-anchor="end" fill="#e2e8f0" font-size="12.5" font-weight="600">3V3</text>
+<rect x="723" y="661.0" width="14" height="18" rx="3" fill="#334155"/>
+<text x="716" y="674.0" text-anchor="end" fill="#e2e8f0" font-size="12.5" font-weight="600">GND</text>
+<rect x="30" y="150" width="220" height="222" rx="8" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+<rect x="30" y="150" width="220" height="30" rx="8" fill="#1e3a8a"/>
+<rect x="30" y="172" width="220" height="8" fill="#1e3a8a"/>
+<text x="140.0" y="170" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="700">RC522 (RFID, SPI)</text>
+<text x="42" y="201.0" text-anchor="start" font-size="12.5" fill="#1e293b">SDA/SS</text>
+<circle cx="250" cy="197.0" r="5" fill="#2563eb"/>
+<text x="42" y="227.0" text-anchor="start" font-size="12.5" fill="#1e293b">SCK</text>
+<circle cx="250" cy="223.0" r="5" fill="#2563eb"/>
+<text x="42" y="253.0" text-anchor="start" font-size="12.5" fill="#1e293b">MOSI</text>
+<circle cx="250" cy="249.0" r="5" fill="#2563eb"/>
+<text x="42" y="279.0" text-anchor="start" font-size="12.5" fill="#1e293b">MISO</text>
+<circle cx="250" cy="275.0" r="5" fill="#2563eb"/>
+<text x="42" y="305.0" text-anchor="start" font-size="12.5" fill="#1e293b">RST</text>
+<circle cx="250" cy="301.0" r="5" fill="#2563eb"/>
+<text x="42" y="331.0" text-anchor="start" font-size="12.5" fill="#1e293b">3.3V (JANGAN 5V)</text>
+<circle cx="250" cy="327.0" r="5" fill="#ea580c"/>
+<text x="42" y="357.0" text-anchor="start" font-size="12.5" fill="#1e293b">GND</text>
+<circle cx="250" cy="353.0" r="5" fill="#334155"/>
+<rect x="950" y="150" width="220" height="144" rx="8" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+<rect x="950" y="150" width="220" height="30" rx="8" fill="#1e3a8a"/>
+<rect x="950" y="172" width="220" height="8" fill="#1e3a8a"/>
+<text x="1060.0" y="170" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="700">OLED 0.96 (I2C)</text>
+<text x="1158" y="201.0" text-anchor="end" font-size="12.5" fill="#1e293b">VCC -&gt; 3.3V</text>
+<circle cx="950" cy="197.0" r="5" fill="#ea580c"/>
+<text x="1158" y="227.0" text-anchor="end" font-size="12.5" fill="#1e293b">GND</text>
+<circle cx="950" cy="223.0" r="5" fill="#334155"/>
+<text x="1158" y="253.0" text-anchor="end" font-size="12.5" fill="#1e293b">SDA</text>
+<circle cx="950" cy="249.0" r="5" fill="#0891b2"/>
+<text x="1158" y="279.0" text-anchor="end" font-size="12.5" fill="#1e293b">SCL</text>
+<circle cx="950" cy="275.0" r="5" fill="#0891b2"/>
+<rect x="950" y="360" width="220" height="118" rx="8" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+<rect x="950" y="360" width="220" height="30" rx="8" fill="#1e3a8a"/>
+<rect x="950" y="382" width="220" height="8" fill="#1e3a8a"/>
+<text x="1060.0" y="380" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="700">LED hijau / merah</text>
+<text x="1158" y="411.0" text-anchor="end" font-size="12.5" fill="#1e293b">hijau -&gt; R220</text>
+<circle cx="950" cy="407.0" r="5" fill="#16a34a"/>
+<text x="1158" y="437.0" text-anchor="end" font-size="12.5" fill="#1e293b">merah -&gt; R220</text>
+<circle cx="950" cy="433.0" r="5" fill="#9333ea"/>
+<text x="1158" y="463.0" text-anchor="end" font-size="12.5" fill="#1e293b">katoda (2x)</text>
+<circle cx="950" cy="459.0" r="5" fill="#334155"/>
+<rect x="950" y="540" width="220" height="92" rx="8" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+<rect x="950" y="540" width="220" height="30" rx="8" fill="#1e3a8a"/>
+<rect x="950" y="562" width="220" height="8" fill="#1e3a8a"/>
+<text x="1060.0" y="560" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="700">Buzzer active</text>
+<text x="1158" y="591.0" text-anchor="end" font-size="12.5" fill="#1e293b">(+)</text>
+<circle cx="950" cy="587.0" r="5" fill="#16a34a"/>
+<text x="1158" y="617.0" text-anchor="end" font-size="12.5" fill="#1e293b">(-)</text>
+<circle cx="950" cy="613.0" r="5" fill="#334155"/>
+<text x="40" y="718" font-size="12" font-weight="700" fill="#475569">KETERANGAN WARNA</text>
+<line x1="40" y1="728" x2="66" y2="728" stroke="#dc2626" stroke-width="3.5" stroke-linecap="round"/>
+<text x="74" y="732" font-size="12" fill="#334155">5V (power)</text>
+<line x1="40" y1="750" x2="66" y2="750" stroke="#ea580c" stroke-width="3.5" stroke-linecap="round"/>
+<text x="74" y="754" font-size="12" fill="#334155">3.3V (power)</text>
+<line x1="40" y1="772" x2="66" y2="772" stroke="#334155" stroke-width="3.5" stroke-linecap="round"/>
+<text x="74" y="776" font-size="12" fill="#334155">GND (ground bersama)</text>
+<line x1="40" y1="794" x2="66" y2="794" stroke="#2563eb" stroke-width="3.5" stroke-linecap="round"/>
+<text x="74" y="798" font-size="12" fill="#334155">sinyal / data</text>
+<text x="1160" y="790" text-anchor="end" font-size="12" fill="#b45309">RC522 wajib 3.3V. SPI = GPIO5/18/23/19, I2C OLED = GPIO21/22.</text>
+</svg>

@@ -382,6 +382,11 @@ dengan use-case *monitoring kualitas udara* yang diminta — bedanya hanya amban
 #warn[Susun rangkaian saat ESP32 *tidak* terhubung USB/power. Colok power baru
 setelah semua kabel terpasang dan dicek ulang.]
 
+#figure(image("diagrams/wiring-fire-detector.svg", width: 100%))
+
+Warna kabel pada diagram = peran (merah 5V, oranye 3.3V, abu GND, biru sinyal).
+Tabel di bawah adalah rujukan pasti pin-per-pin.
+
 *MQ-2 (sensor gas, analog).* MQ-2 perlu 5V untuk elemen pemanasnya. Tapi
 output AO bisa mendekati 5V saat asap pekat, padahal pin ESP32 maksimal *3.3V*.
 Karena itu AO dilewatkan *pembagi tegangan* 2 resistor 10k#sym.Omega dulu.
@@ -501,6 +506,11 @@ standar menghubungkan modul ke mikrokontroler — serta mengirim *data string*
 
 #warn[*RC522 HANYA boleh diberi 3.3V.* Memberi 5V akan merusak modul. Ini
 kesalahan paling umum di lab ini — cek dua kali sebelum colok power.]
+
+#figure(image("diagrams/wiring-smart-absensi.svg", width: 100%))
+
+Warna kabel pada diagram = peran (oranye 3.3V, abu GND, biru SPI, cyan I2C).
+Tabel di bawah adalah rujukan pasti pin-per-pin.
 
 *RC522 (SPI):*
 #table(
