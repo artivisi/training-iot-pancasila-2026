@@ -191,6 +191,17 @@
 
     .slide .flow .arrow { color: var(--accent); font-size: 2rem; }
 
+    .slide a { color: var(--accent); text-decoration: underline; font-weight: 600; }
+
+    .slide .dl-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+      width: 100%;
+      max-width: 900px;
+    }
+    .slide .dl-grid ul { font-size: 1.4rem; line-height: 2.1; }
+
     .slide .disclaimer {
       font-size: 0.85rem;
       color: #94a3b8;
@@ -438,6 +449,27 @@ void loop() {
     <tr><td>Power</td><td>USB</td><td>Baterai 18650 + LM2596 (portabel)</td></tr>
   </table>
   <p class="disclaimer">Struktur identik — yang berubah hanya makna angka sensor &amp; apa yang diaktuasi. Pompa selalu lewat relay, tidak langsung dari pin ESP32. Prototype dibawa trainer; bukan lab peserta.</p>
+</div>
+
+<!-- Materi Download -->
+<div class="slide">
+  <h2>Materi Download</h2>
+  <div class="dl-grid">
+    <div>
+      <h3>Workbook</h3>
+      <ul>
+        <li><a href="WORKBOOK.pdf">WORKBOOK.pdf</a><br>fundamental + 2 lab</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Firmware (.ino)</h3>
+      <ul>
+        <li><a href="firmware/fire-detector.zip">fire-detector.zip</a></li>
+        <li><a href="firmware/smart-absensi.zip">smart-absensi.zip</a></li>
+      </ul>
+    </div>
+  </div>
+  <p class="disclaimer">Isi <code>secrets.h</code> sendiri (token Blynk + WiFi) — contoh ada di <code>secrets.h.example</code> dalam tiap zip. Semua materi juga ada di repo GitHub.</p>
 </div>
 
 <!-- 13. Penutup -->

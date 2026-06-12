@@ -54,6 +54,26 @@ open docs/index.html
 
 Navigasi: panah/spasi (next), panah kiri (prev), Home/End (loncat).
 
+## GitHub Pages & Download Materi
+
+Repo dipublikasi via **GitHub Pages dari folder `docs/`** (branch `main`).
+Seluruh materi yang bisa di-download ada di `docs/` supaya bisa diakses
+langsung dari URL Pages:
+
+| Materi | URL (relatif ke Pages) |
+|--------|------------------------|
+| Deck (slide) | `index.html` |
+| Workbook PDF | `WORKBOOK.pdf` |
+| Firmware Fire Detector | `firmware/fire-detector.zip` |
+| Firmware Smart Absensi | `firmware/smart-absensi.zip` |
+
+Slide **"Materi Download"** di deck menaut ke file-file ini. PDF & zip
+di-generate `make` dan ikut di-commit, jadi HEAD = yang dibagikan.
+
+Mengaktifkan Pages (sekali): repo **Settings → Pages → Source: Deploy from a
+branch → Branch: `main` / folder `/docs`**. URL terbit di
+`https://<owner>.github.io/training-iot-pancasila-2026/`.
+
 ### Firmware
 
 Buka folder sketch di Arduino IDE 2.x (board **ESP32 Dev Module**). Sebelum

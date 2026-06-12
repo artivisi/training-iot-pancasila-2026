@@ -18,9 +18,14 @@ MERMAID_CONFIG := diagrams/mermaid-config.json
 FIRMWARE := ../firmware/fire-detector/fire-detector.ino \
 	../firmware/smart-absensi/smart-absensi.ino
 
+# Bundle firmware (.ino + secrets.h.example, TANPA secrets.h) jadi zip yang
+# bisa di-download dari GitHub Pages.
+DOCS_FW_DIR := $(DOCS_DIR)/firmware
+DOCS_ZIPS := $(DOCS_FW_DIR)/fire-detector.zip $(DOCS_FW_DIR)/smart-absensi.zip
+
 .PHONY: all watch clean diagrams
 
-all: $(PDFS) $(DOCS_PDFS)
+all: $(PDFS) $(DOCS_PDFS) $(DOCS_ZIPS)
 
 # --root .. supaya read() bisa embed firmware dari ../firmware (di luar workbook/
 # tapi masih di dalam repo).
@@ -34,6 +39,18 @@ $(WIRING_SVGS): diagrams/wiring.py
 
 $(DOCS_DIR)/%.pdf: %.pdf
 	cp $< $@
+
+# Zip dibuat dari dalam ../firmware supaya entри teratas = nama folder lab
+# (mis. fire-detector/fire-detector.ino), siap dibuka di Arduino IDE.
+$(DOCS_FW_DIR)/fire-detector.zip: ../firmware/fire-detector/fire-detector.ino ../firmware/fire-detector/secrets.h.example
+	@mkdir -p $(DOCS_FW_DIR)
+	@rm -f $@
+	cd ../firmware && zip -rq "$(CURDIR)/$(DOCS_FW_DIR)/fire-detector.zip" fire-detector -x 'fire-detector/secrets.h'
+
+$(DOCS_FW_DIR)/smart-absensi.zip: ../firmware/smart-absensi/smart-absensi.ino ../firmware/smart-absensi/secrets.h.example
+	@mkdir -p $(DOCS_FW_DIR)
+	@rm -f $@
+	cd ../firmware && zip -rq "$(CURDIR)/$(DOCS_FW_DIR)/smart-absensi.zip" smart-absensi -x 'smart-absensi/secrets.h'
 
 diagrams: $(PNG_DIAGRAMS) $(WIRING_SVGS)
 
@@ -50,4 +67,4 @@ watch:
 	typst watch --root .. WORKBOOK.typ
 
 clean:
-	rm -f $(PDFS) $(DOCS_PDFS)
+	rm -f $(PDFS) $(DOCS_PDFS) $(DOCS_ZIPS)
