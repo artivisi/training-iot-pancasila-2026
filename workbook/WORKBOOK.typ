@@ -608,9 +608,87 @@ jangan menumpuk jumper di satu lubang pin ESP32.]
 // ============================================================
 
 Smart Irrigation *bukan* lab hands-on peserta — hanya didemokan trainer di sesi
-penutup sebagai pembanding. Arsitekturnya mirip Fire Detector tetapi memakai
-*sensor kelembapan tanah* (capacitive soil moisture) sebagai input dan *pompa
-mini via relay* sebagai aktuator: kalau tanah kering melewati ambang, pompa
-menyala menyiram, lalu mati saat lembap. Konsep yang sama persis dengan yang
-dipelajari di Lab Fire Detector — baca analog, ambang, aktuasi relay — diterapkan
-ke kasus berbeda. Prototype dibawa trainer; peserta cukup mengamati dan diskusi.
+penutup sebagai pembanding. Peserta cukup mengamati dan diskusi. Bagian ini
+menjelaskan cara kerjanya supaya peserta paham bahwa pola IoT yang sama dipakai
+ulang untuk kasus berbeda.
+
+== Tujuan & konsep
+
+Menyiram tanaman otomatis: baca *kelembapan tanah*, kalau tanah *kering*
+melewati ambang #sym.arrow.r nyalakan *pompa* untuk menyiram, lalu matikan saat
+tanah sudah cukup *lembap*. Inti konsepnya identik dengan Lab Fire Detector —
+*baca sensor analog (ADC) #sym.arrow.r ambang #sym.arrow.r aktuasi via relay* —
+hanya sensor dan aktuatornya yang berbeda. Inilah poin diskusi: sekali paham
+pola ini, peserta bisa menukar sensor/aktuator untuk membuat use-case baru.
+
+#figure(image("diagrams/arsitektur-smart-irrigation.png", width: 95%))
+
+== Daftar komponen (BOM) & estimasi biaya
+
+#table(
+  columns: (auto, 1.6fr, 1.5fr, auto),
+  inset: 6pt, stroke: 0.5pt + rgb("#cbd5e1"),
+  align: (center, left, left, right),
+  [*No*], [*Komponen*], [*Fungsi*], [*Estimasi*],
+  [1], [ESP32 DevKit V1], [Mikrokontroler + WiFi], [Rp 65.000],
+  [2], [Capacitive Soil Moisture v1.2], [Sensor kelembapan tanah (analog, anti-karat)], [Rp 21.500],
+  [3], [DHT11], [Suhu & kelembapan udara (konteks)], [Rp 20.000],
+  [4], [Relay 5V 1ch], [Saklar daya pompa], [Rp 23.000],
+  [5], [Pompa celup mini 5V], [Aktuator penyiram], [Rp 21.000],
+  [6], [Selang 8mm], [Salurkan air ke pot], [Rp 10.000],
+  [7], [2x baterai 18650 + holder], [Power mandiri 7.4V], [Rp 32.000],
+  [8], [LM2596 step-down], [Turunkan 7.4V #sym.arrow.r 5V untuk ESP32], [Rp 9.000],
+  [9], [Breadboard + jumper], [Perakitan tanpa solder], [Rp 40.000],
+  table.cell(colspan: 3, align: right)[*Total estimasi*], [*Rp 241.500*],
+)
+
+#tip[Beda dengan 2 lab utama yang ditenagai USB, Smart Irrigation memakai
+*baterai 18650* + *LM2596 step-down* supaya portabel (taruh di pot tanpa colokan).
+18650 seri = 7.4V, diturunkan ke 5V untuk ESP32. Inilah konsep tambahan yang
+didemokan: *IoT bertenaga baterai*.]
+
+== Cara kerja & logika kontrol
+
+Sensor kapasitif mengeluarkan tegangan analog: *kering #sym.arrow.r nilai ADC
+tinggi*, *basah #sym.arrow.r nilai ADC rendah* (tidak ada arus lewat tanah, jadi
+tahan korosi — lebih awet dari sensor resistif). ESP32 membaca nilai ini lalu
+menerapkan logika ambang. Untuk mencegah pompa hidup-mati cepat di sekitar
+ambang, dipakai *dua ambang (histeresis)*:
+
+```cpp
+const int KERING = 2800;   // di atas ini = tanah kering -> siram
+const int BASAH  = 2200;   // di bawah ini = cukup basah -> stop
+bool pompaNyala = false;
+
+void loop() {
+  int tanah = analogRead(34);          // baca soil moisture (GPIO34)
+  if (tanah > KERING) pompaNyala = true;   // kering -> pompa ON
+  if (tanah < BASAH)  pompaNyala = false;  // basah -> pompa OFF
+  digitalWrite(26, pompaNyala ? HIGH : LOW);  // relay -> pompa
+  delay(1000);
+}
+```
+
+Angka `KERING`/`BASAH` *wajib dikalibrasi*: ukur nilai `analogRead` saat sensor
+di udara/tanah kering vs saat ujung sensor dicelup air, lalu pilih dua angka di
+antaranya. Nilai pasti berbeda per sensor dan per media tanam.
+
+#warn[Pompa *jangan* ditenagai dari pin ESP32 — arusnya terlalu besar dan akan
+merusak board. Pompa diberi daya langsung dari baterai/5V, dan ESP32 hanya
+mengontrol *relay* (sinyal kecil) yang menyambung/memutus daya pompa. Pola ini
+sama dengan relay di Lab Fire Detector.]
+
+== Paralel dengan lab utama
+
+#table(
+  columns: (1fr, 1fr, 1fr),
+  inset: 6pt, stroke: 0.5pt + rgb("#cbd5e1"), align: left,
+  [*Peran*], [*Fire Detector*], [*Smart Irrigation*],
+  [Sensor analog], [MQ-2 (gas)], [Soil moisture (kelembapan)],
+  [Logika], [gas > ambang #sym.arrow.r bahaya], [tanah > ambang #sym.arrow.r kering],
+  [Aktuator (relay)], [kipas/pompa exhaust], [pompa penyiram],
+  [Cloud], [Blynk], [Blynk],
+)
+
+Strukturnya identik. Yang berubah hanya *makna* angka sensor dan *apa* yang
+diaktuasi — bukti bahwa satu pola IoT bisa dipakai ulang lintas kasus.

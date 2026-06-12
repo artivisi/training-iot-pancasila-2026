@@ -1,0 +1,55 @@
+---
+title: Arsitektur Smart Irrigation (demo)
+---
+flowchart LR
+    subgraph SENSE["Sensor (input)"]
+        SOIL[Soil moisture kapasitif<br/>v1.2, analog anti-karat]
+        DHT[DHT11<br/>suhu + kelembapan udara]
+    end
+
+    subgraph CTRL["Pemroses"]
+        ESP[ESP32 DevKit V1<br/>WiFi]
+    end
+
+    subgraph PWR["Power mandiri"]
+        BAT[2x 18650 seri 7.4V]
+        STEP[LM2596 step-down]
+    end
+
+    subgraph ACT["Aktuator"]
+        RELAY[Relay 5V]
+        PUMP[Pompa celup mini 5V]
+        TUBE[Selang 8mm]
+    end
+
+    subgraph CLOUD["Monitoring"]
+        BLYNK[Blynk Cloud]
+        HP([Smartphone])
+    end
+
+    POT((Pot tanaman))
+
+    BAT --> STEP --> ESP
+    BAT --> RELAY
+
+    SOIL -->|analog GPIO34| ESP
+    DHT -->|digital GPIO4| ESP
+    ESP -->|GPIO26| RELAY
+    RELAY -->|switching| PUMP
+    PUMP --> TUBE
+    TUBE -.air.-> POT
+    ESP -.WiFi.-> BLYNK
+    BLYNK <--> HP
+
+    classDef sensor fill:#dcfce7,stroke:#15803d
+    classDef mcu fill:#fef3c7,stroke:#a16207
+    classDef power fill:#fce7f3,stroke:#be185d
+    classDef actuator fill:#fee2e2,stroke:#b91c1c
+    classDef cloud fill:#dbeafe,stroke:#1d4ed8
+    classDef plant fill:#ecfccb,stroke:#4d7c0f
+    class SOIL,DHT sensor
+    class ESP mcu
+    class BAT,STEP power
+    class RELAY,PUMP,TUBE actuator
+    class BLYNK,HP cloud
+    class POT plant

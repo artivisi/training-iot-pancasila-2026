@@ -424,15 +424,20 @@ void loop() {
 <!-- 12. Smart Irrigation demo -->
 <div class="slide">
   <h2>Demo: Smart Irrigation</h2>
-  <p>Sensor kelembapan tanah → kalau kering melewati ambang, pompa menyala menyiram, lalu mati saat lembap.</p>
-  <br>
-  <div class="flow">
-    <span class="box">Soil moisture</span><span class="arrow">→</span>
-    <span class="box">ESP32</span><span class="arrow">→</span>
-    <span class="box">Relay</span><span class="arrow">→</span>
-    <span class="box">Pompa</span>
-  </div>
-  <p class="disclaimer">Pola identik Lab Fire Detector — baca analog, ambang, aktuasi relay — diterapkan ke kasus berbeda. Prototype dibawa trainer.</p>
+  <img src="assets/arsitektur-smart-irrigation.png" alt="Arsitektur Smart Irrigation" class="slide-img">
+</div>
+
+<!-- 13. Smart Irrigation — pola sama -->
+<div class="slide">
+  <h2>Smart Irrigation = Pola yang Sama</h2>
+  <table>
+    <tr><th>Peran</th><th>Fire Detector</th><th>Smart Irrigation</th></tr>
+    <tr><td>Sensor analog</td><td>MQ-2 (gas)</td><td>Soil moisture (kelembapan)</td></tr>
+    <tr><td>Logika</td><td>gas &gt; ambang → bahaya</td><td>tanah &gt; ambang → kering</td></tr>
+    <tr><td>Aktuator (relay)</td><td>kipas/pompa exhaust</td><td>pompa penyiram</td></tr>
+    <tr><td>Power</td><td>USB</td><td>Baterai 18650 + LM2596 (portabel)</td></tr>
+  </table>
+  <p class="disclaimer">Struktur identik — yang berubah hanya makna angka sensor &amp; apa yang diaktuasi. Pompa selalu lewat relay, tidak langsung dari pin ESP32. Prototype dibawa trainer; bukan lab peserta.</p>
 </div>
 
 <!-- 13. Penutup -->
