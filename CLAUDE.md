@@ -14,21 +14,32 @@ reuse berat dari batch IoT STMIK Tazkia yang sudah ada. Jangan gold-plating.
 - Tiap step harus eksplisit: wiring, instalasi tool, kode ditulis lengkap dan
   bisa copy-paste. Tidak ada langkah yang diasumsikan "sudah tahu".
 
-## Asisten (CONSTRAINT UTAMA DESAIN MATERIAL)
+## Asisten & pembagian peran mengajar
 
 Asisten = mahasiswa STMIK Tazkia yang sudah pernah membangun prototype kasus
-ini di mata kuliahnya. Jumlah cukup banyak, TAPI skill/pengetahuan/pengalaman
-terbatas.
+ini di mata kuliahnya. Jumlah cukup banyak; skill belum dalam, tapi backstop
+trainer kuat:
 
-Konsekuensi: **material harus menggendong asisten, bukan sebaliknya.**
+- Tiap asisten ditugaskan menyusun material training versinya sendiri. Tujuan:
+  melatih mindset mengajar/membimbing, BUKAN dipakai di kelas. Material kanonik
+  = repo ini (punya trainer).
+- Trainer (Endy) standby; eskalasi yang asisten tidak bisa jawab langsung
+  ditangani trainer di tempat.
 
-- Tiap lab fully self-contained: bisa dijalankan asisten tanpa trainer.
-- Firmware copy-paste, wiring eksplisit (pin-to-pin), foto/diagram bila perlu.
-- Tiap lab punya **panduan fasilitator** berisi titik gagal yang sudah
-  diantisipasi + cara fix (mis. salah COM port, MQ sensor butuh warm-up,
-  RC522 harus 3.3V bukan 5V, token Blynk salah, WiFi captive portal kampus).
-- Wajib ada **dry-run / train-the-trainer**: asisten jalankan lab-nya sendiri
-  dari material, di kit baru, sebelum hari-H.
+Pembagian peran saat training:
+
+- **Trainer**: konsep umum IoT, apa itu ESP/Arduino/breadboard, komponen utama
+  (sesi fundamental, plenary).
+- **Asisten**: pandu lab — wiring detail, info per-hardware, jawab pertanyaan
+  sebisanya; eskalasi ke trainer kalau mentok.
+
+Implikasi material (tetap rapi, tanpa over-engineering):
+
+- Lab self-contained: firmware copy-paste, wiring pin-to-pin, diagram bila perlu.
+- `fasilitator.md` ringkas: daftar titik gagal umum + fix cepat (salah COM port,
+  MQ warm-up, RC522 3.3V, token Blynk, WiFi kampus). Bantu asisten, bukan ganti
+  trainer.
+- Dry-run sebelum hari-H berguna tapi bukan blocker — trainer backstop live.
 
 ## Studi Kasus (3 lab)
 
