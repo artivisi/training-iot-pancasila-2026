@@ -7,6 +7,20 @@ Training berbiaya rendah. Target kualitas **pragmatis**: peserta pulang dengan
 prototype yang jalan. BUKAN kedalaman seperti corporate training. Material lean,
 reuse berat dari batch IoT STMIK Tazkia yang sudah ada. Jangan gold-plating.
 
+## Framing PkM (Pengabdian kepada Masyarakat)
+
+Kegiatan ini dibingkai sebagai **PkM** dosen STMIK Tazkia (Endy Muhardin) —
+untuk angka kredit / BKD. Konsekuensi pada dokumentasi:
+
+- **Mitra:** Universitas Pancasila (penerima manfaat: mahasiswanya).
+- **Pelaksana:** dosen STMIK Tazkia + pelibatan mahasiswa sebagai asisten
+  (poin plus PkM: keterlibatan mahasiswa).
+- **Pendukung:** ArtiVisi (Endy juga praktisi industri di ArtiVisi).
+- Materi (deck + workbook) harus mencantumkan identitas PkM: judul kegiatan,
+  pelaksana, mitra, tanggal, logo STMIK Tazkia + ArtiVisi.
+- Siapkan struktur untuk **laporan PkM** sebagai output (judul, tujuan, mitra,
+  metode, peserta, luaran, dokumentasi) — bisa di-generate dari repo nanti.
+
 ## Peserta
 
 - 8 peserta, latar belakang teknis minimal (asumsikan belum pernah coding /
@@ -35,10 +49,11 @@ Pembagian peran saat training:
 
 Implikasi material (tetap rapi, tanpa over-engineering):
 
-- Lab self-contained: firmware copy-paste, wiring pin-to-pin, diagram bila perlu.
-- `fasilitator.md` ringkas: daftar titik gagal umum + fix cepat (salah COM port,
-  MQ warm-up, RC522 3.3V, token Blynk, WiFi kampus). Bantu asisten, bukan ganti
-  trainer.
+- Bagian lab self-contained: firmware copy-paste, wiring pin-to-pin, diagram.
+- **TIDAK ada panduan fasilitator terpisah.** Asisten pakai workbook yang sama
+  dengan peserta. Titik gagal umum (salah COM port, MQ warm-up, RC522 3.3V,
+  token Blynk, WiFi kampus) ditulis inline di langkah workbook sebagai catatan
+  "kalau error".
 - Dry-run sebelum hari-H berguna tapi bukan blocker — trainer backstop live.
 
 ## Studi Kasus
@@ -90,21 +105,37 @@ Model peer-led, trainer supervisi:
 
 Durasi target ~2 hari (fleksibel).
 
-## Struktur Repo (rencana)
+## Deliverable & Toolchain
 
-```
-fundamentals/        -- modul bersama: setup tool, breadboard, blink, wifi, blynk
-labs/                -- 2 lab hands-on
-  fire-detector/
-  smart-absensi/
-    README.md        -- overview, hasil akhir
-    hardware.md      -- BOM + wiring pin-to-pin + estimasi biaya
-    firmware/        -- kode ESP32 (copy-paste ready)
-    langkah.md       -- step-by-step untuk peserta
-    fasilitator.md   -- panduan asisten + daftar titik gagal & fix
-demo/
-  smart-irrigation/  -- prototype + bahan demo/diskusi (bukan lab peserta lengkap)
-```
+Mengikuti pola repo `bsi-islamic-ecosystem-ai` (template yang sudah terbukti):
+
+- **Deck**: `docs/index.html` — single-file standalone HTML (CSS/JS embedded,
+  navigasi panah/spasi). Tanpa build. Dipublikasi via GitHub Pages.
+- **Workbook**: `workbook/WORKBOOK.typ` → PDF (Typst). **SATU file** berisi
+  fundamental + detail kedua lab. Dipakai peserta DAN asisten, kedua kelompok
+  pakai workbook yang sama. PDF di-commit agar HEAD = yang dibagikan.
+- **Build**: `workbook/Makefile` — `make` / `make watch` / `make clean`.
+- **Diagram arsitektur/alur**: Mermaid `.mmd` → PNG via `mmdc`.
+- **Diagram wiring breadboard**: Fritzing atau foto beranotasi (Mermaid tidak
+  cocok untuk wiring). Simpan di `workbook/diagrams/`.
+- Logo PkM (`logo-stmik.svg`, `logo-artivisi.svg`) ada di `docs/assets/` dan
+  `workbook/assets/` — pasang di cover deck & workbook.
+
+### File Map
+
+| Path | Isi |
+|------|-----|
+| `docs/index.html` | Deck instruktur, standalone HTML, GitHub Pages |
+| `docs/assets/` | Logo (STMIK Tazkia, ArtiVisi), gambar deck |
+| `workbook/WORKBOOK.typ` + `.pdf` | Workbook tunggal: fundamental + 2 lab |
+| `workbook/Makefile` | Build pipeline Typst + diagram |
+| `workbook/diagrams/` | Source `.mmd`/Fritzing + hasil render |
+| `workbook/assets/` | Logo untuk workbook |
+| `README.md` | Isi repo, cara build, format, instruktur (pola BSI) |
+
+Isi workbook (urutan bab): fundamental (setup tool, breadboard, blink, WiFi,
+Blynk) -> Lab Fire Detector -> Lab Smart Absensi. Tiap lab: tujuan, BOM +
+estimasi biaya, wiring pin-to-pin, firmware copy-paste, langkah, catatan error.
 
 ## Aturan Penulisan Material
 
@@ -113,3 +144,15 @@ demo/
 - Kode disertai penjelasan baris yang relevan untuk pemula.
 - Cantumkan BOM + estimasi biaya komponen per lab.
 - Reuse dari batch STMIK; jangan tulis ulang dari nol kalau sudah ada.
+- **Istilah teknis IoT/hardware (ESP32, breadboard, GPIO, sensor, SPI) memang
+  diajarkan** — kenalkan + jelaskan saat pertama muncul. Yang dihindari hanya
+  jargon dev yang tidak relevan untuk pemula (deploy, framework, CI/CD, commit).
+
+## Do Not
+
+- Jangan commit secret: token Blynk, password WiFi. Pakai `secrets.h`
+  (sudah di `.gitignore`). Di material, tunjukkan placeholder + cara isi.
+- Jangan tulis ulang material dari nol kalau batch STMIK (S08/S09/S04) sudah
+  punya wiring/BOM/konsepnya.
+- Repo berpotensi publik (GitHub Pages) — jangan masukkan data pribadi peserta
+  Univ. Pancasila.
