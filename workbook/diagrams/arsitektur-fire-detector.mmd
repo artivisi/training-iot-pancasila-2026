@@ -1,0 +1,44 @@
+---
+title: Arsitektur Lab Fire Detector
+---
+flowchart LR
+    subgraph SENSE["Sensor (input)"]
+        MQ2[MQ-2<br/>gas + asap]
+        FLAME[Flame sensor<br/>lidah api]
+        DHT[DHT11<br/>suhu + kelembapan]
+    end
+
+    subgraph CTRL["Pemroses"]
+        ESP[ESP32 DevKit V1<br/>WiFi]
+    end
+
+    subgraph ACT["Output lokal"]
+        BUZZ[Buzzer]
+        LED[LED indikator]
+        RELAY[Relay 5V<br/>kipas / pompa]
+    end
+
+    subgraph CLOUD["Monitoring"]
+        BLYNK[Blynk Cloud]
+        HP([Smartphone<br/>dashboard])
+    end
+
+    MQ2 -->|analog GPIO34| ESP
+    FLAME -->|digital GPIO35| ESP
+    DHT -->|digital GPIO4| ESP
+
+    ESP -->|GPIO27| BUZZ
+    ESP -->|GPIO25| LED
+    ESP -->|GPIO26| RELAY
+
+    ESP -.WiFi.-> BLYNK
+    BLYNK <--> HP
+
+    classDef sensor fill:#dcfce7,stroke:#15803d
+    classDef mcu fill:#fef3c7,stroke:#a16207
+    classDef out fill:#fee2e2,stroke:#b91c1c
+    classDef cloud fill:#dbeafe,stroke:#1d4ed8
+    class MQ2,FLAME,DHT sensor
+    class ESP mcu
+    class BUZZ,LED,RELAY out
+    class BLYNK,HP cloud

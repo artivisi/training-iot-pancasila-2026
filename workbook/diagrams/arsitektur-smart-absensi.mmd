@@ -1,0 +1,42 @@
+---
+title: Arsitektur Lab Smart Absensi
+---
+flowchart LR
+    USER([Peserta]) -->|tap kartu| CARD[Kartu RFID<br/>Mifare 13.56MHz]
+
+    subgraph SENSE["Input"]
+        CARD
+        RC522[RFID RC522<br/>SPI]
+    end
+
+    subgraph CTRL["Pemroses"]
+        ESP[ESP32 DevKit V1<br/>WiFi]
+    end
+
+    subgraph FB["Feedback lokal"]
+        OLED[OLED 0.96<br/>I2C]
+        BUZZ[Buzzer]
+        LED[LED hijau/merah]
+    end
+
+    subgraph CLOUD["Monitoring"]
+        BLYNK[Blynk Cloud]
+        HP([Smartphone<br/>dashboard])
+    end
+
+    CARD -.RF.-> RC522
+    RC522 -->|SPI: SS5 SCK18 MOSI23 MISO19| ESP
+    ESP -->|I2C SDA21 SCL22| OLED
+    ESP -->|GPIO27| BUZZ
+    ESP -->|GPIO25/26| LED
+    ESP -.WiFi.-> BLYNK
+    BLYNK <--> HP
+
+    classDef sensor fill:#dcfce7,stroke:#15803d
+    classDef mcu fill:#fef3c7,stroke:#a16207
+    classDef out fill:#fee2e2,stroke:#b91c1c
+    classDef cloud fill:#dbeafe,stroke:#1d4ed8
+    class CARD,RC522 sensor
+    class ESP mcu
+    class OLED,BUZZ,LED out
+    class BLYNK,HP cloud

@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pelatihan IoT — STMIK Tazkia x Universitas Pancasila</title>
+  <style>
+    :root {
+      --brand: #1e3a8a;
+      --accent: #ea580c;
+      --light: #f5f5f5;
+      --slate-600: #475569;
+      --slate-800: #1e293b;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--brand);
+      color: var(--slate-800);
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 4rem 6rem;
+      background: #fff;
+    }
+
+    .slide.active { display: flex; }
+
+    .slide h1 {
+      font-size: 3.2rem;
+      font-weight: 800;
+      color: var(--brand);
+      margin-bottom: 1.5rem;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .slide h2 {
+      font-size: 2.6rem;
+      font-weight: 700;
+      color: var(--brand);
+      margin-bottom: 1.2rem;
+      line-height: 1.3;
+    }
+
+    .slide h3 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .slide p {
+      font-size: 1.6rem;
+      line-height: 1.8;
+      color: var(--slate-600);
+      text-align: center;
+      max-width: 900px;
+    }
+
+    .slide ul {
+      list-style: none;
+      font-size: 1.6rem;
+      line-height: 2;
+      color: var(--slate-600);
+      max-width: 900px;
+      width: 100%;
+    }
+
+    .slide ul li::before {
+      content: "→ ";
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .slide .subtitle {
+      font-size: 1.4rem;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .slide .author {
+      font-size: 1.1rem;
+      color: var(--slate-600);
+      margin-top: 1rem;
+    }
+
+    .slide .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      width: 100%;
+      max-width: 950px;
+    }
+
+    .slide .highlight {
+      background: var(--accent);
+      color: #fff;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .slide code {
+      background: #f1f5f9;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.9em;
+    }
+
+    .slide pre {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 2rem 2.5rem;
+      border-radius: 8px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 1.3rem;
+      line-height: 1.8;
+      overflow-x: auto;
+      width: 100%;
+      max-width: 1000px;
+      text-align: left;
+      white-space: pre;
+    }
+
+    .slide pre code { background: none; padding: 0; font-size: inherit; color: inherit; }
+
+    .slide-img {
+      max-width: 90%;
+      max-height: 68vh;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+
+    .slide table {
+      border-collapse: collapse;
+      width: 100%;
+      max-width: 1100px;
+      font-size: 1.2rem;
+    }
+
+    .slide th {
+      background: var(--brand);
+      color: #fff;
+      padding: 0.8rem 1.4rem;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    .slide td {
+      padding: 0.8rem 1.4rem;
+      border-bottom: 1px solid #e2e8f0;
+      color: var(--slate-600);
+      vertical-align: top;
+    }
+
+    .slide tr:nth-child(even) td { background: #f8fafc; }
+
+    .slide .flow {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--brand);
+    }
+
+    .slide .flow .box {
+      background: #eff6ff;
+      border: 2px solid var(--brand);
+      border-radius: 8px;
+      padding: 1rem 1.4rem;
+    }
+
+    .slide .flow .arrow { color: var(--accent); font-size: 2rem; }
+
+    .slide .disclaimer {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      margin-top: 1.2rem;
+      text-align: center;
+      max-width: 900px;
+    }
+
+    /* Cover */
+    .slide.cover .cover-logos {
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;
+      margin-bottom: 2.5rem;
+    }
+    .slide.cover .cover-logos img { height: 90px; width: auto; }
+    .slide.cover .pkm {
+      font-size: 1.15rem;
+      color: var(--slate-600);
+      margin-top: 1.5rem;
+      line-height: 1.7;
+      text-align: center;
+    }
+    .slide.cover .pkm strong { color: var(--brand); }
+
+    /* Navigation bar */
+    .nav-bar {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 3rem;
+      background: rgba(15,23,42,0.9);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.5rem;
+      z-index: 100;
+    }
+    .nav-bar .counter { color: rgba(255,255,255,0.6); font-size: 0.85rem; font-family: monospace; }
+    .nav-bar .controls { display: flex; gap: 0.5rem; }
+    .nav-bar button {
+      background: rgba(255,255,255,0.15);
+      border: none; color: #fff;
+      padding: 0.3rem 0.8rem;
+      border-radius: 4px; cursor: pointer; font-size: 0.85rem;
+    }
+    .nav-bar button:hover { background: rgba(255,255,255,0.25); }
+
+    @media (max-width: 768px) {
+      .slide { padding: 2rem 1.5rem; }
+      .slide h1 { font-size: 1.8rem; }
+      .slide h2 { font-size: 1.4rem; }
+      .slide p, .slide ul { font-size: 1rem; }
+      .slide .two-col { grid-template-columns: 1fr; gap: 1.5rem; }
+      .slide .flow { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- 1. Cover -->
+<div class="slide cover active">
+  <div class="cover-logos">
+    <img src="assets/logo-stmik.svg" alt="STMIK Tazkia">
+    <img src="assets/logo-artivisi.svg" alt="PT ArtiVisi Intermedia">
+  </div>
+  <h1>Pelatihan Internet of Things</h1>
+  <p class="subtitle">Fire Detector (Monitoring Kualitas Udara) &amp; Smart Absensi · ESP32</p>
+  <div class="pkm">
+    <strong>Kegiatan Pengabdian kepada Masyarakat (PkM)</strong><br>
+    Pelaksana: Dosen STMIK Tazkia (Endy Muhardin) + asisten mahasiswa<br>
+    Mitra: Universitas Pancasila · Pendukung: PT ArtiVisi Intermedia · Juni 2026
+  </div>
+</div>
+
+<!-- 2. Agenda -->
+<div class="slide">
+  <h2>Agenda (~2 Hari)</h2>
+  <div class="two-col">
+    <div>
+      <h3>Hari 1 — Fundamental</h3>
+      <ul>
+        <li>Apa itu IoT, ESP32, breadboard</li>
+        <li>Setup Arduino IDE + driver USB</li>
+        <li>Akun Blynk + blink LED</li>
+        <li>Konek WiFi + kirim 1 data</li>
+        <li>Overview studi kasus</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Hari 2 — Lab Konkuren</h3>
+      <ul>
+        <li>Pembagian 4 kelompok ke 2 lab</li>
+        <li>Lab Fire Detector (2 kelompok)</li>
+        <li>Lab Smart Absensi (2 kelompok)</li>
+        <li>Demo swap antar kelompok</li>
+        <li>Demo Smart Irrigation + penutup</li>
+      </ul>
+    </div>
+  </div>
+  <p class="disclaimer">Format peer-led: asisten memandu lab, trainer floating mengawasi &amp; tangani eskalasi.</p>
+</div>
+
+<!-- 3. Apa itu IoT -->
+<div class="slide">
+  <h2>Apa itu IoT?</h2>
+  <p>Menghubungkan alat fisik ke internet supaya datanya bisa dipantau &amp; dikontrol dari jauh. Pola dasar tiap proyek di pelatihan ini sama:</p>
+  <br>
+  <div class="flow">
+    <span class="box">Sensor</span><span class="arrow">→</span>
+    <span class="box">ESP32</span><span class="arrow">→</span>
+    <span class="box">WiFi</span><span class="arrow">→</span>
+    <span class="box">Cloud (Blynk)</span><span class="arrow">→</span>
+    <span class="box">Smartphone</span>
+  </div>
+</div>
+
+<!-- 4. ESP32 -->
+<div class="slide">
+  <h2>Kenalan: ESP32 &amp; Breadboard</h2>
+  <div class="two-col">
+    <div>
+      <h3>ESP32 DevKit V1</h3>
+      <ul>
+        <li>Komputer mungil 1 chip — menjalankan 1 program</li>
+        <li><span class="highlight">WiFi</span> sudah bawaan</li>
+        <li>Banyak kaki <strong>GPIO</strong> untuk sensor &amp; output</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Breadboard</h3>
+      <ul>
+        <li>Rakit tanpa solder</li>
+        <li>Tepi + / − = jalur power</li>
+        <li>Tengah nyambung per kolom</li>
+        <li><strong>Semua GND disatukan</strong></li>
+      </ul>
+    </div>
+  </div>
+  <p class="disclaimer">GPIO bisa jadi input (baca sensor) atau output (nyalakan buzzer/LED). Pin analog baca angka 0–4095; pin digital cuma HIGH/LOW.</p>
+</div>
+
+<!-- 5. Tool & akun -->
+<div class="slide">
+  <h2>Tool yang Dipakai</h2>
+  <table>
+    <tr><th>Komponen</th><th>Pilihan</th><th>Catatan</th></tr>
+    <tr><td>Toolchain</td><td>Arduino IDE 2.x</td><td>Paling ramah pemula</td></tr>
+    <tr><td>Board support</td><td>esp32 by Espressif</td><td>Via Boards Manager URL</td></tr>
+    <tr><td>Driver USB</td><td>CP210x / CH340</td><td>Sesuai chip di board</td></tr>
+    <tr><td>Cloud / dashboard</td><td>Blynk</td><td>Virtual Pin V0, V1, …</td></tr>
+    <tr><td>Token &amp; WiFi</td><td><code>secrets.h</code></td><td>Tidak ikut ter-commit</td></tr>
+  </table>
+  <p class="disclaimer">Detail langkah ada di workbook Bab "Fundamental IoT &amp; Setup".</p>
+</div>
+
+<!-- 6. Pola program -->
+<div class="slide">
+  <h2>Pola Program Arduino</h2>
+  <pre><code>void setup() {
+  // jalan sekali saat board nyala:
+  // siapkan pin, mulai WiFi & Blynk
+}
+
+void loop() {
+  // jalan berulang terus-menerus:
+  // baca sensor, kirim data, aktuasi
+}</code></pre>
+  <p class="disclaimer">Semua firmware lab ditulis lengkap di workbook — peserta tinggal copy-paste &amp; upload.</p>
+</div>
+
+<!-- 7. Studi kasus -->
+<div class="slide">
+  <h2>Studi Kasus</h2>
+  <table>
+    <tr><th>Lab</th><th>Komponen inti</th><th>Konsep</th></tr>
+    <tr><td><strong>Fire Detector</strong><br>(+ kualitas udara)</td><td>ESP32, MQ-2, flame, DHT11, buzzer, relay</td><td>Sensor gas analog, ambang, alert, aktuasi</td></tr>
+    <tr><td><strong>Smart Absensi</strong></td><td>ESP32, RFID RC522, OLED, buzzer</td><td>SPI, baca kartu, kirim log ke cloud</td></tr>
+    <tr><td>Smart Irrigation<br><em>(demo saja)</em></td><td>ESP32, soil moisture, relay, pompa</td><td>Sama dgn Fire Detector, kasus beda</td></tr>
+  </table>
+  <p class="disclaimer">2 lab hands-on berjalan konkuren. Smart Irrigation hanya didemokan trainer di penutup.</p>
+</div>
+
+<!-- 8. Lab Fire Detector -->
+<div class="slide">
+  <h2>Lab Fire Detector</h2>
+  <img src="assets/arsitektur-fire-detector.png" alt="Arsitektur Fire Detector" class="slide-img">
+</div>
+
+<!-- 9. Lab Smart Absensi -->
+<div class="slide">
+  <h2>Lab Smart Absensi</h2>
+  <img src="assets/arsitektur-smart-absensi.png" alt="Arsitektur Smart Absensi" class="slide-img">
+</div>
+
+<!-- 10. Konsep universal -->
+<div class="slide">
+  <h2>Konsep Universal (Kedua Lab)</h2>
+  <ul>
+    <li><strong>WiFi 2.4GHz</strong> — ESP32 tidak support 5GHz; WiFi captive portal kampus → pakai hotspot HP</li>
+    <li><strong>Blynk datastream</strong> — kirim nilai ke Virtual Pin, tampil sebagai widget</li>
+    <li><strong>Baca sensor</strong> — analog (<code>analogRead</code>) vs digital (<code>digitalRead</code>)</li>
+    <li><strong>Tegangan</strong> — pin ESP32 maksimal 3.3V; RC522 &amp; DHT pakai 3.3V, MQ-2 &amp; relay pakai 5V</li>
+  </ul>
+  <p class="disclaimer">Saat konsep ini muncul di kedua lab, kedua lab di-pause untuk plenary singkat, lalu lanjut konkuren.</p>
+</div>
+
+<!-- 11. Pembagian & cara kerja -->
+<div class="slide">
+  <h2>Pembagian Kelompok</h2>
+  <div class="two-col">
+    <div>
+      <h3>Susunan</h3>
+      <ul>
+        <li>8 peserta → 4 kelompok @2 orang</li>
+        <li>2 kelompok Fire Detector</li>
+        <li>2 kelompok Smart Absensi</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Peran</h3>
+      <ul>
+        <li><strong>Trainer:</strong> konsep umum, floating, eskalasi</li>
+        <li><strong>Asisten:</strong> pandu lab, wiring, jawab per-hardware</li>
+        <li><strong>Workbook:</strong> dipakai peserta &amp; asisten, isinya sama</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- 12. Smart Irrigation demo -->
+<div class="slide">
+  <h2>Demo: Smart Irrigation</h2>
+  <p>Sensor kelembapan tanah → kalau kering melewati ambang, pompa menyala menyiram, lalu mati saat lembap.</p>
+  <br>
+  <div class="flow">
+    <span class="box">Soil moisture</span><span class="arrow">→</span>
+    <span class="box">ESP32</span><span class="arrow">→</span>
+    <span class="box">Relay</span><span class="arrow">→</span>
+    <span class="box">Pompa</span>
+  </div>
+  <p class="disclaimer">Pola identik Lab Fire Detector — baca analog, ambang, aktuasi relay — diterapkan ke kasus berbeda. Prototype dibawa trainer.</p>
+</div>
+
+<!-- 13. Penutup -->
+<div class="slide cover">
+  <div class="cover-logos">
+    <img src="assets/logo-stmik.svg" alt="STMIK Tazkia">
+    <img src="assets/logo-artivisi.svg" alt="PT ArtiVisi Intermedia">
+  </div>
+  <h1>Penutup</h1>
+  <ul>
+    <li>Tiap proyek IoT polanya sama: sensor → ESP32 → cloud → HP</li>
+    <li>Mulai dari 1 sensor + 1 data, lalu tambah bertahap</li>
+    <li>Error ditampilkan eksplisit — jangan diamkan nilai palsu</li>
+    <li>Workbook + firmware bisa dipakai mandiri di rumah</li>
+  </ul>
+  <p class="author">Terima kasih — Endy Muhardin · STMIK Tazkia &amp; PT ArtiVisi Intermedia</p>
+</div>
+
+<div class="nav-bar">
+  <span class="counter"><span id="current">1</span> / <span id="total"></span></span>
+  <div class="controls">
+    <button onclick="prev()">← Prev</button>
+    <button onclick="next()">Next →</button>
+  </div>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  let current = 0;
+  document.getElementById('total').textContent = slides.length;
+
+  function show(n) {
+    slides[current].classList.remove('active');
+    current = (n + slides.length) % slides.length;
+    slides[current].classList.add('active');
+    document.getElementById('current').textContent = current + 1;
+  }
+  function next() { show(current + 1); }
+  function prev() { show(current - 1); }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); next(); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prev(); }
+    if (e.key === 'Home') { e.preventDefault(); show(0); }
+    if (e.key === 'End') { e.preventDefault(); show(slides.length - 1); }
+  });
+
+  let touchStartX = 0;
+  document.addEventListener('touchstart', function(e) { touchStartX = e.touches[0].clientX; });
+  document.addEventListener('touchend', function(e) {
+    const diff = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(diff) > 50) { diff < 0 ? next() : prev(); }
+  });
+</script>
+
+</body>
+</html>
