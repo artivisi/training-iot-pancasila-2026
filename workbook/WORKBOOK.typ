@@ -182,6 +182,37 @@ kaki (*pin*) untuk dicolok sensor.
 - *Pin digital* = hanya baca/tulis dua kondisi: HIGH (#sym.tilde.op 3.3V) atau
   LOW (0V).
 
+== Macam-macam board: ada/tidaknya WiFi
+
+"Board Arduino" tidak otomatis punya WiFi. *WiFi/Bluetooth itu fitur chip
+tertentu* — banyak board populer sama sekali tidak punya radio WiFi. Karena
+seluruh lab di sini mengirim data ke cloud, *board wajib punya WiFi*. Itu sebab
+kita memakai *ESP32*.
+
+#table(
+  columns: (1.4fr, auto, auto, auto, 1.3fr),
+  inset: 6pt, stroke: 0.5pt + rgb("#cbd5e1"),
+  align: (left, center, center, center, left),
+  [*Board*], [*WiFi*], [*Logika*], [*Pin analog*], [*Catatan*],
+  [*ESP32* DevKit V1], [Ya], [3.3V], [banyak], [Dipakai di pelatihan ini],
+  [ESP8266 (NodeMCU / Wemos D1)], [Ya], [3.3V], [1 (A0)], [WiFi-only, pin lebih sedikit],
+  [Arduino Uno], [Tidak], [5V], [6], [Tidak bisa untuk lab ini],
+  [Arduino Nano], [Tidak], [5V], [8], [Sama seperti Uno, lebih kecil],
+  [Arduino Mega], [Tidak], [5V], [16], [Banyak pin, tetap tanpa WiFi],
+)
+
+#err[*`WiFi.h ... No such file or directory` padahal board package sudah ada.*
+Kemungkinan besar board-nya *Arduino Uno/Nano/Mega yang memang tidak punya
+WiFi* — `WiFi.h` tidak ada untuk board itu. Lab ini *tidak bisa* jalan di board
+tanpa WiFi. Pakai *ESP32*. (Arduino Uno bisa ditambah modul WiFi terpisah
+seperti ESP-01, tapi itu di luar lingkup pelatihan — lebih simpel langsung
+ESP32.)]
+
+#tip[*Logika 3.3V vs 5V penting saat wiring.* ESP32/ESP8266 bekerja di 3.3V,
+sedangkan Arduino Uno/Nano/Mega di 5V. Semua angka pin & peringatan tegangan di
+workbook ini mengacu ke *ESP32 (3.3V)*. Jangan menyalin wiring dari tutorial
+Arduino Uno mentah-mentah — level tegangannya beda.]
+
 == Breadboard
 
 *Breadboard* = papan untuk merangkai komponen tanpa menyolder. Lubang-lubangnya
