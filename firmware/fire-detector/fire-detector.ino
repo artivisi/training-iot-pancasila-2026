@@ -52,7 +52,7 @@ void kirimSensor() {
   int gas = analogRead(PIN_MQ2_AO);
   bool api = (digitalRead(PIN_FLAME) == FLAME_TERDETEKSI);
 
-  // DHT bisa gagal baca (kabel longgar / timing). JANGAN kirim angka palsu —
+  // DHT bisa gagal baca (kabel longgar / timing). JANGAN kirim angka asal-asalan —
   // laporkan error eksplisit dan lewati pengiriman suhu/kelembapan kali ini.
   float suhu = dht.readTemperature();
   float lembap = dht.readHumidity();
