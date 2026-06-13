@@ -230,6 +230,21 @@ install (ketik nama, klik Install, terima kalau diminta install dependency):
   [Adafruit SSD1306 + Adafruit GFX Library], [Smart Absensi — OLED],
 )
 
+#err[*Saat compile/upload muncul `... No such file or directory` (file header
+tidak ketemu).* Header bukan berarti hilang dari komputer — biasanya board atau
+library belum disiapkan:
+- `WiFi.h` *bukan* library yang di-install terpisah. Ia ikut di dalam *paket
+  board ESP32* dan hanya muncul kalau *board ESP32 dipilih*. Kalau error ini
+  muncul: pastikan paket _esp32 by Espressif_ sudah ter-install
+  (#link(<setup-ide>)[bagian _Install Arduino IDE + dukungan ESP32_]) *dan*
+  Tools #sym.arrow.r Board diset ke *ESP32 Dev Module* (bukan Arduino Uno/AVR).
+- `BlynkSimpleEsp32.h` berasal dari library *Blynk* (Volodymyr Shymanskyy) di
+  tabel ini. Kalau tidak ketemu, library Blynk belum ter-install.
+- Pola sama untuk header lain: `DHT.h` #sym.arrow.r library DHT Adafruit;
+  `MFRC522.h` #sym.arrow.r library MFRC522; `Adafruit_SSD1306.h` #sym.arrow.r
+  library Adafruit SSD1306.
+]
+
 == Buat akun & device Blynk <setup-blynk>
 
 *Blynk* = layanan cloud + app smartphone untuk dashboard IoT. Data dari ESP32
@@ -673,6 +688,7 @@ jangan menumpuk jumper di satu lubang pin ESP32.]
   columns: (1.2fr, 1.8fr),
   inset: 7pt, stroke: 0.5pt + rgb("#cbd5e1"), align: left,
   [*Gejala*], [*Cek ini*],
+  [`WiFi.h` / `BlynkSimpleEsp32.h` `No such file`], [`WiFi.h` ikut paket board ESP32 (pilih board *ESP32 Dev Module*); `BlynkSimpleEsp32.h` dari library *Blynk* — install dulu],
   [Port tidak muncul], [Driver USB (CP210x / CH340), kabel data bukan charge-only],
   [Upload "Failed to connect"], [Tahan tombol BOOT saat "Connecting...", pastikan Serial Monitor lain tertutup],
   [Serial Monitor karakter aneh], [Baud rate set ke 115200],
