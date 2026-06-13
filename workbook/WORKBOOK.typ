@@ -465,6 +465,85 @@ Kalau aktuasi kebalik, tukar logika di kode (`HIGH`#sym.harpoons.ltrb`LOW` pada
 HIGH, dipakai di sini) dan *passive* (perlu nada/tone). Pastikan pakai buzzer
 *active*. Cek juga polaritas (+)/(#sym.minus).]
 
+== Pengayaan (opsional): servo memutar sensor untuk cari arah api
+
+#text(fill: mute, size: 9.5pt)[_Bagian ini opsional — bukan langkah wajib lab.
+Cocok untuk kelompok yang sudah selesai duluan, atau sebagai demo._]
+
+*Apakah benar-benar bisa dipakai?* Ya, tapi dengan batasan. Sensor IR bersifat
+*directional* (punya arah pandang #sym.tilde.op 60°), jadi kalau diputar pelan
+dengan servo sambil membaca output *analog (AO)*, sudut dengan nilai IR paling
+ekstrem = *perkiraan kasar* arah api. Yang realistis didapat hanya *arah kasar*
+(#sym.plus.minus 15–30°), bukan penunjukan presisi. Ini bagus sebagai latihan
+*kontrol servo + scan analog + cari nilai maksimum*, tetapi *bukan* sistem
+penarget api yang andal. Pakai di kondisi terkontrol: satu sumber api, cahaya
+ruangan redup, jarak dekat (#sym.lt.eq 50 cm).
+
+#warn[*Tiga syarat supaya tidak mengecewakan:*
+- *Daya servo terpisah.* Servo SG90 menarik arus sentakan besar. Jangan ambil
+  dari pin ESP32 — board bisa _brownout_ / restart (apalagi saat WiFi nyala).
+  Beri servo 5V dari sumber terpisah (mis. baterai/adaptor) dengan *GND
+  disatukan* ke ESP32.
+- *Cahaya terkontrol.* Sensor IR juga menangkap *matahari, lampu pijar/halogen,
+  pantulan*. Di ruang terang, lampu bisa "menang" atas api kecil #sym.arrow.r
+  arah salah.
+- *Gerak lalu diam, baru baca.* Putar servo ke sudut, tunggu #sym.tilde.op 250 ms
+  supaya diam, baru `analogRead`. Kalau dibaca sambil bergerak, nilainya kabur.]
+
+*Wiring tambahan* (di atas rangkaian Fire Detector):
+#table(
+  columns: (1.3fr, 1.7fr),
+  inset: 6pt, stroke: 0.5pt + rgb("#cbd5e1"), align: left,
+  [*Bagian*], [*Ke*],
+  [Servo SG90 — sinyal (oranye)], [GPIO13],
+  [Servo SG90 — VCC (merah)], [5V *sumber terpisah* (bukan pin ESP32)],
+  [Servo SG90 — GND (coklat)], [GND bersama dengan ESP32],
+  [Flame sensor — AO (analog)], [GPIO32 (ADC1)],
+)
+Pasang flame sensor di "kepala" servo supaya ikut berputar. Untuk scanning,
+baca pin *AO* (analog), bukan DO. Butuh library *ESP32Servo* (Manage Libraries).
+
+#err[*Servo bergetar / ESP32 restart saat servo bergerak.* Daya servo masih
+diambil dari ESP32. Pisahkan 5V servo ke sumber sendiri, satukan GND.]
+
+Logika scan (gabungkan ke sketch utama, atau uji terpisah dulu):
+
+```cpp
+#include <ESP32Servo.h>
+
+const int PIN_SERVO    = 13;   // sinyal servo
+const int PIN_FLAME_AO = 32;   // AO flame sensor (analog)
+Servo servo;
+
+int cariArahApi() {
+  int sudutTerbaik = 90, aoMaks = 0;
+  for (int sudut = 0; sudut <= 180; sudut += 10) {
+    servo.write(sudut);
+    delay(250);                       // tunggu servo diam DULU
+    int ao = analogRead(PIN_FLAME_AO);
+    if (ao > aoMaks) { aoMaks = ao; sudutTerbaik = sudut; }
+  }
+  return sudutTerbaik;                 // sudut IR terkuat = perkiraan arah api
+}
+
+void setup() {
+  Serial.begin(115200);
+  servo.attach(PIN_SERVO);
+}
+
+void loop() {
+  int arah = cariArahApi();
+  Serial.print("Perkiraan arah api di sudut "); Serial.println(arah);
+  servo.write(arah);                   // arahkan kepala/nozzle ke sana
+  delay(2000);
+}
+```
+
+#warn[*Polaritas AO berbeda antar modul.* Pada sebagian modul flame, makin dekat
+api nilai AO makin *kecil* (bukan besar). Cek dulu: dekatkan api dan lihat
+Serial Monitor. Kalau nilainya turun, ubah pencarian jadi *minimum* (`ao < aoMin`,
+mulai dari `aoMin = 4095`).]
+
 // ============================================================
 = Lab Smart Absensi
 // ============================================================
