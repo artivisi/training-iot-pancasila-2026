@@ -5,6 +5,10 @@ build/
 .vscode/
 secrets.h
 
+# Sertifikat: nama peserta & output dengan nama asli (data pribadi)
+certificate/names.txt
+certificate/certificate.pdf
+
 # Server Python
 .env
 *.db

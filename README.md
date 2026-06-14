@@ -54,6 +54,23 @@ open docs/index.html
 
 Navigasi: panah/spasi (next), panah kiri (prev), Home/End (loncat).
 
+## Sertifikat Peserta
+
+Sertifikat keikutsertaan (A4 landscape PDF, 1 halaman per peserta) digenerate
+dari `certificate/`:
+
+```sh
+cd certificate
+cp names.txt.example names.txt    # isi nama peserta, satu per baris
+make                              # -> certificate.pdf (semua peserta)
+make sample                       # -> certificate-sample.pdf (nama placeholder)
+```
+
+`names.txt` dan `certificate.pdf` (berisi nama asli) **tidak di-commit** —
+data pribadi, repo ini publik. Yang di-commit hanya template + pratinjau
+`certificate-sample.pdf`. Edit judul kegiatan/tanggal/nomor di bagian atas
+`certificate.typ`. Sertifikat **tidak** dipublikasi ke GitHub Pages.
+
 ## GitHub Pages & Download Materi
 
 Repo dipublikasi via **GitHub Pages dari folder `docs/`** (branch `main`).
