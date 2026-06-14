@@ -818,3 +818,94 @@ sama dengan relay di Lab Fire Detector.]
 
 Strukturnya identik. Yang berubah hanya *makna* angka sensor dan *apa* yang
 diaktuasi — bukti bahwa satu pola IoT bisa dipakai ulang lintas kasus.
+
+// ============================================================
+= Lampiran C — Kirim data ke VPS sendiri (Python)
+
+Selama ini data dikirim ke *Blynk*. Bagian ini *alternatif*: kirim data ke
+*server sendiri* di VPS, lalu simpan ke *database*. Cocok kalau ingin data
+mentah tersimpan dan diolah sendiri. Asumsi: sudah punya VPS dan paham Python
+dasar.
+
+Alur: ESP32 #sym.arrow.r *HTTP POST (JSON)* #sym.arrow.r app Python (Flask) di
+VPS #sym.arrow.r *INSERT* ke database (SQLite) #sym.arrow.r ditampilkan di
+halaman web.
+
+#figure(image("diagrams/arsitektur-vps.png", width: 92%))
+
+File ada di folder `server/` (app) dan `firmware/fire-detector-vps/` (ESP32).
+
+== Server Python (Flask + SQLite)
+
+Satu file `server/app.py`. Tiga endpoint: `POST /api/readings` (terima data,
+butuh header `X-API-Key`), `GET /api/readings` (ambil data JSON), `GET /`
+(dashboard). Database dibuat otomatis saat pertama jalan.
+
+#raw(read("/server/app.py"), lang: "python", block: true)
+
+Jalankan (lokal dulu untuk uji):
+
+```sh
+cd server
+python3 -m venv .venv && . .venv/bin/activate
+pip install -r requirements.txt
+export API_KEY="$(openssl rand -hex 24)"   # WAJIB, tidak ada default
+python app.py                              # http://localhost:5000
+```
+
+#err[*macOS: buka `http://localhost:5000` malah dapat 403 / "Forbidden".* Port
+5000 di macOS dipakai *AirPlay Receiver*. Jalankan server di port lain:
+`PORT=5055 python app.py`, lalu akses `http://localhost:5055`. (Atau matikan
+AirPlay Receiver di System Settings.)]
+
+#warn[`API_KEY` *wajib* di-set lewat environment — server sengaja menolak jalan
+tanpa itu (bukan diberi token default yang tidak aman). Samakan nilainya dengan
+`VPS_API_KEY` di `secrets.h` firmware.]
+
+== Uji server tanpa ESP32 (curl)
+
+Sebelum repot dengan hardware, pastikan server menerima data:
+
+```sh
+curl -X POST http://localhost:5055/api/readings \
+  -H "Content-Type: application/json" -H "X-API-Key: $API_KEY" \
+  -d '{"device":"uji","kind":"fire","data":{"gas":1500,"suhu":31.2,"lembap":58}}'
+# -> {"created_at":"...","id":1}
+```
+
+Buka `http://localhost:5055` #sym.arrow.r data muncul di tabel. Kalau token
+salah server balas `401`; kalau field kurang balas `400` (validasi eksplisit,
+bukan menyimpan data setengah).
+
+== Firmware ESP32 kirim ke VPS
+
+Sketch `firmware/fire-detector-vps/fire-detector-vps.ino`. Sensor & wiring sama
+dengan Lab Fire Detector; bedanya data dikirim via `HTTPClient` (bukan Blynk).
+Tidak perlu library tambahan — `WiFi.h` & `HTTPClient.h` ikut paket board ESP32.
+Isi `secrets.h` (WiFi, `VPS_URL`, `VPS_API_KEY`).
+
+#raw(read("/firmware/fire-detector-vps/fire-detector-vps.ino"), lang: "cpp", block: true)
+
+#err[*Serial: `Gagal konek VPS`.* `VPS_URL` salah / VPS tidak menyala / port
+diblok firewall. Saat uji lokal, `VPS_URL` harus pakai *IP komputer* di
+jaringan yang sama (mis. `http://192.168.1.10:5055/api/readings`), bukan
+`localhost` (localhost di ESP32 = ESP32 itu sendiri).]
+
+#err[*Serial: `Server menolak (HTTP 401)`.* `VPS_API_KEY` di firmware beda
+dengan `API_KEY` di server. *HTTP 400* = format JSON/body salah.]
+
+== Deploy & keamanan di VPS
+
+Detail di `server/README.md`. Ringkas:
+- Jalankan dengan *gunicorn* (bukan dev server), di belakang *nginx* untuk HTTPS.
+- Jadikan service dengan *systemd* supaya auto-restart.
+- `.env` (token) & file `*.db` ada di `.gitignore` — jangan di-commit.
+- Untuk data sungguhan pakai *HTTPS* (`https://` di `VPS_URL`).
+- SQLite cukup untuk skala lab; untuk produksi ganti ke PostgreSQL/MySQL
+  (ubah `get_db()` + placeholder query) — skema tabel sama.
+
+== Untuk Lab Smart Absensi
+
+Pola sama: kirim saat kartu ditempel, bukan periodik. Ganti `kind` jadi
+`"absensi"` dan `data` jadi `{"uid": "A1B2C3D4", "tap": 5}`. Server &
+database tidak perlu diubah — kolom `payload` menyimpan JSON apa pun.

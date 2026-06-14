@@ -1,0 +1,30 @@
+---
+title: Arsitektur kirim data ke VPS sendiri
+---
+flowchart LR
+    subgraph DEV["Device"]
+        ESP[ESP32 + sensor]
+    end
+
+    subgraph VPS["VPS (server sendiri)"]
+        APP[Flask app.py<br/>POST /api/readings]
+        DB[(SQLite<br/>tabel readings)]
+        WEB[Dashboard /<br/>HTML]
+    end
+
+    ADMIN([Browser])
+
+    ESP -->|HTTP POST JSON + X-API-Key| APP
+    APP -->|INSERT| DB
+    DB --> WEB
+    WEB --> ADMIN
+    APP -->|201 / error| ESP
+
+    classDef mcu fill:#fef3c7,stroke:#a16207
+    classDef app fill:#dbeafe,stroke:#1d4ed8
+    classDef db fill:#dcfce7,stroke:#15803d
+    classDef web fill:#fee2e2,stroke:#b91c1c
+    class ESP mcu
+    class APP app
+    class DB db
+    class WEB,ADMIN web

@@ -16,12 +16,15 @@ MERMAID_CONFIG := diagrams/mermaid-config.json
 # Firmware di-embed ke workbook lewat read() -> jadikan dependency supaya
 # perubahan kode otomatis memicu recompile PDF.
 FIRMWARE := ../firmware/fire-detector/fire-detector.ino \
-	../firmware/smart-absensi/smart-absensi.ino
+	../firmware/smart-absensi/smart-absensi.ino \
+	../firmware/fire-detector-vps/fire-detector-vps.ino \
+	../server/app.py
 
 # Bundle firmware (.ino + secrets.h.example, TANPA secrets.h) jadi zip yang
-# bisa di-download dari GitHub Pages.
+# bisa di-download dari GitHub Pages. server.zip = app server Python.
 DOCS_FW_DIR := $(DOCS_DIR)/firmware
-DOCS_ZIPS := $(DOCS_FW_DIR)/fire-detector.zip $(DOCS_FW_DIR)/smart-absensi.zip
+DOCS_ZIPS := $(DOCS_FW_DIR)/fire-detector.zip $(DOCS_FW_DIR)/smart-absensi.zip \
+	$(DOCS_FW_DIR)/fire-detector-vps.zip $(DOCS_DIR)/server.zip
 
 .PHONY: all watch clean diagrams
 
@@ -51,6 +54,16 @@ $(DOCS_FW_DIR)/smart-absensi.zip: ../firmware/smart-absensi/smart-absensi.ino ..
 	@mkdir -p $(DOCS_FW_DIR)
 	@rm -f $@
 	cd ../firmware && zip -rq "$(CURDIR)/$(DOCS_FW_DIR)/smart-absensi.zip" smart-absensi -x 'smart-absensi/secrets.h'
+
+$(DOCS_FW_DIR)/fire-detector-vps.zip: ../firmware/fire-detector-vps/fire-detector-vps.ino ../firmware/fire-detector-vps/secrets.h.example
+	@mkdir -p $(DOCS_FW_DIR)
+	@rm -f $@
+	cd ../firmware && zip -rq "$(CURDIR)/$(DOCS_FW_DIR)/fire-detector-vps.zip" fire-detector-vps -x 'fire-detector-vps/secrets.h'
+
+# server.zip: app Python (tanpa .env, *.db, .venv, __pycache__).
+$(DOCS_DIR)/server.zip: ../server/app.py ../server/requirements.txt ../server/README.md ../server/.env.example
+	@rm -f $@
+	cd .. && zip -rq "$(CURDIR)/$(DOCS_DIR)/server.zip" server -x 'server/.env' 'server/*.db*' 'server/.venv/*' 'server/__pycache__/*'
 
 diagrams: $(PNG_DIAGRAMS) $(WIRING_SVGS)
 
