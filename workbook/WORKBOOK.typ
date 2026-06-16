@@ -912,6 +912,57 @@ jaringan yang sama (mis. `http://192.168.1.10:5055/api/readings`), bukan
 dengan `API_KEY` di server. *HTTP 422* = format JSON/body salah (field kurang
 atau salah tipe).]
 
+== Alternatif: rakit JSON dengan ArduinoJson
+
+Di sketch di atas, JSON dirakit *manual* dengan `String` (`body += ...`). Cara
+ini ringkas dan tanpa library tambahan, cocok karena bentuk datanya tetap dan
+ESP32 hanya *menulis* (bukan membaca/parse) JSON. Tapi peserta perlu tahu cara
+yang lebih umum dipakai: library *ArduinoJson*. Berikut bagian penyusun JSON yang
+sama, ditulis ulang dengan ArduinoJson (v7) supaya bisa dibandingkan langsung.
+
+Install dulu lewat *Sketch #sym.arrow.r Include Library #sym.arrow.r Manage
+Libraries*, cari `ArduinoJson` (oleh Benoit Blanchon).
+
+```cpp
+#include <ArduinoJson.h>   // Library Manager: "ArduinoJson" by Benoit Blanchon
+
+// ... di dalam kirimKeVps(), menggantikan blok "String body = ..." :
+
+JsonDocument doc;                          // v7: ukuran diatur otomatis
+doc["device"] = DEVICE_ID;
+doc["kind"]   = "fire";
+
+JsonObject data = doc["data"].to<JsonObject>();   // objek bersarang "data"
+data["gas"] = gas;
+data["api"] = api;                         // bool -> true/false (bukan string)
+data["suhu"]   = suhu;                      // float NaN -> ditulis null otomatis
+data["lembap"] = lembap;                    // jadi cabang if(dhtOk) tak perlu
+
+String body;
+serializeJson(doc, body);                   // body siap dikirim: http.POST(body)
+```
+
+Yang perlu disorot saat membandingkan:
+
+- *Tidak ada tanda kutip/koma yang dirakit tangan.* ArduinoJson yang mengurus
+  format. Untuk nilai string yang isinya tak terkendali (mengandung `"` atau
+  `\`), ini penting — versi manual bisa menghasilkan JSON rusak, ArduinoJson
+  meng-_escape_ otomatis. (Di sketch ini aman karena yang dirakit cuma angka,
+  bool, dan `DEVICE_ID` yang kita kontrol.)
+- *`float` NaN otomatis jadi `null`.* Karena DHT yang gagal mengembalikan NaN,
+  cabang `if (dhtOk)` tidak diperlukan lagi untuk JSON-nya. Pesan error di
+  Serial tetap dicetak terpisah — `null` bukan menyembunyikan kegagalan, hanya
+  menandai pembacaan ini kosong.
+- *Presisi desimal default berbeda.* ArduinoJson menulis `float` dengan lebih
+  banyak angka di belakang koma daripada versi manual (yang dibatasi 1 angka
+  via `String(suhu, 1)`). Server menerima keduanya; kalau ingin persis 1 angka,
+  pakai `data["suhu"] = serialized(String(suhu, 1));`.
+
+#tip[Kapan pilih yang mana? *Manual* (versi utama) untuk payload kecil &
+bentuk tetap — hemat flash/RAM, tanpa dependency. *ArduinoJson* begitu data jadi
+dinamis/bercabang, atau ada nilai string dari input bebas yang wajib di-_escape_.
+Untuk *membaca* (parse) JSON dari server, ArduinoJson hampir selalu lebih baik.]
+
 == Deploy & keamanan di VPS
 
 Detail di `server/README.md`. Ringkas:
