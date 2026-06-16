@@ -1,5 +1,5 @@
 ---
-title: Arsitektur kirim data ke VPS sendiri
+title: Arsitektur kirim data ke VPS sendiri (FastAPI + Supabase)
 ---
 flowchart LR
     subgraph DEV["Device"]
@@ -7,16 +7,19 @@ flowchart LR
     end
 
     subgraph VPS["VPS (server sendiri)"]
-        APP[Flask app.py<br/>POST /api/readings]
-        DB[(SQLite<br/>tabel readings)]
+        APP[FastAPI app.py<br/>POST /api/readings]
         WEB[Dashboard /<br/>HTML]
+    end
+
+    subgraph SUPA["Supabase (Postgres terkelola)"]
+        DB[(Postgres<br/>tabel readings)]
     end
 
     ADMIN([Browser])
 
     ESP -->|HTTP POST JSON + X-API-Key| APP
-    APP -->|INSERT| DB
-    DB --> WEB
+    APP -->|INSERT SQL| DB
+    WEB -->|SELECT SQL| DB
     WEB --> ADMIN
     APP -->|201 / error| ESP
 

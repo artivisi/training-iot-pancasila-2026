@@ -820,26 +820,42 @@ Strukturnya identik. Yang berubah hanya *makna* angka sensor dan *apa* yang
 diaktuasi — bukti bahwa satu pola IoT bisa dipakai ulang lintas kasus.
 
 // ============================================================
-= Lampiran C — Kirim data ke VPS sendiri (Python)
+= Lampiran C — Kirim data ke VPS sendiri (FastAPI + Supabase)
 
 Selama ini data dikirim ke *Blynk*. Bagian ini *alternatif*: kirim data ke
-*server sendiri* di VPS, lalu simpan ke *database*. Cocok kalau ingin data
-mentah tersimpan dan diolah sendiri. Asumsi: sudah punya VPS dan paham Python
-dasar.
+*server sendiri* (FastAPI) di VPS, lalu simpan ke *database Postgres* yang
+di-host di *Supabase*. Cocok kalau ingin data mentah tersimpan dan diolah
+sendiri. Asumsi: sudah punya VPS dan paham FastAPI + Postgres dasar.
 
-Alur: ESP32 #sym.arrow.r *HTTP POST (JSON)* #sym.arrow.r app Python (Flask) di
-VPS #sym.arrow.r *INSERT* ke database (SQLite) #sym.arrow.r ditampilkan di
+*Supabase = Postgres terkelola.* Server cukup memakai _connection string_
+Postgres dari Supabase (lewat driver `psycopg`, SQL Postgres biasa) — *bukan*
+REST/SDK Supabase. Jadi kodenya identik dengan memakai Postgres sendiri;
+Supabase hanya yang meng-host database-nya.
+
+Alur: ESP32 #sym.arrow.r *HTTP POST (JSON)* #sym.arrow.r app FastAPI di VPS
+#sym.arrow.r *INSERT (SQL)* ke Postgres di Supabase #sym.arrow.r ditampilkan di
 halaman web.
 
 #figure(image("diagrams/arsitektur-vps.png", width: 92%))
 
 File ada di folder `server/` (app) dan `firmware/fire-detector-vps/` (ESP32).
 
-== Server Python (Flask + SQLite)
+== Siapkan database Supabase
+
++ Buat project gratis di #link("https://supabase.com")[supabase.com].
++ Buka *Project Settings #sym.arrow.r Database #sym.arrow.r Connection string
+  #sym.arrow.r URI*, salin. Pakai mode *Connection pooler* (port `6543`).
++ Ganti `[YOUR-PASSWORD]` di string itu dengan password database project. String
+  inilah nilai `DATABASE_URL`.
+
+Tabel `readings` dibuat *otomatis* saat server pertama kali start. Datanya juga
+bisa dilihat lewat *Table Editor* di dashboard Supabase.
+
+== Server Python (FastAPI + Supabase)
 
 Satu file `server/app.py`. Tiga endpoint: `POST /api/readings` (terima data,
 butuh header `X-API-Key`), `GET /api/readings` (ambil data JSON), `GET /`
-(dashboard). Database dibuat otomatis saat pertama jalan.
+(dashboard). FastAPI juga otomatis menyediakan `GET /docs` (Swagger UI).
 
 #raw(read("/server/app.py"), lang: "python", block: true)
 
@@ -849,33 +865,34 @@ Jalankan (lokal dulu untuk uji):
 cd server
 python3 -m venv .venv && . .venv/bin/activate
 pip install -r requirements.txt
-export API_KEY="$(openssl rand -hex 24)"   # WAJIB, tidak ada default
-python app.py                              # http://localhost:5000
+export API_KEY="$(openssl rand -hex 24)"          # WAJIB, tidak ada default
+export DATABASE_URL="postgresql://...supabase..." # WAJIB, dari Supabase
+uvicorn app:app --host 0.0.0.0 --port 8000        # http://localhost:8000
 ```
 
-#err[*macOS: buka `http://localhost:5000` malah dapat 403 / "Forbidden".* Port
-5000 di macOS dipakai *AirPlay Receiver*. Jalankan server di port lain:
-`PORT=5055 python app.py`, lalu akses `http://localhost:5055`. (Atau matikan
-AirPlay Receiver di System Settings.)]
+#warn[`API_KEY` *dan* `DATABASE_URL` *wajib* di-set lewat environment — server
+sengaja menolak jalan tanpa keduanya (bukan diberi nilai default yang tidak
+aman). Samakan `API_KEY` dengan `VPS_API_KEY` di `secrets.h` firmware.]
 
-#warn[`API_KEY` *wajib* di-set lewat environment — server sengaja menolak jalan
-tanpa itu (bukan diberi token default yang tidak aman). Samakan nilainya dengan
-`VPS_API_KEY` di `secrets.h` firmware.]
+#err[*Server gagal start: `could not translate host name` / `password
+authentication failed`.* `DATABASE_URL` salah. Salin ulang dari Supabase
+(Project Settings #sym.arrow.r Database) dan pastikan `[YOUR-PASSWORD]` sudah
+diganti password database yang benar.]
 
 == Uji server tanpa ESP32 (curl)
 
 Sebelum repot dengan hardware, pastikan server menerima data:
 
 ```sh
-curl -X POST http://localhost:5055/api/readings \
+curl -X POST http://localhost:8000/api/readings \
   -H "Content-Type: application/json" -H "X-API-Key: $API_KEY" \
   -d '{"device":"uji","kind":"fire","data":{"gas":1500,"suhu":31.2,"lembap":58}}'
-# -> {"created_at":"...","id":1}
+# -> {"id":1,"created_at":"..."}
 ```
 
-Buka `http://localhost:5055` #sym.arrow.r data muncul di tabel. Kalau token
-salah server balas `401`; kalau field kurang balas `400` (validasi eksplisit,
-bukan menyimpan data setengah).
+Buka `http://localhost:8000` #sym.arrow.r data muncul di tabel. Kalau token
+salah server balas `401`; kalau field kurang/salah tipe balas `422` (validasi
+Pydantic eksplisit, bukan menyimpan data setengah).
 
 == Firmware ESP32 kirim ke VPS
 
@@ -892,20 +909,23 @@ jaringan yang sama (mis. `http://192.168.1.10:5055/api/readings`), bukan
 `localhost` (localhost di ESP32 = ESP32 itu sendiri).]
 
 #err[*Serial: `Server menolak (HTTP 401)`.* `VPS_API_KEY` di firmware beda
-dengan `API_KEY` di server. *HTTP 400* = format JSON/body salah.]
+dengan `API_KEY` di server. *HTTP 422* = format JSON/body salah (field kurang
+atau salah tipe).]
 
 == Deploy & keamanan di VPS
 
 Detail di `server/README.md`. Ringkas:
-- Jalankan dengan *gunicorn* (bukan dev server), di belakang *nginx* untuk HTTPS.
+- Jalankan dengan *gunicorn + uvicorn worker* (bukan dev server), di belakang
+  *nginx* untuk HTTPS:
+  `gunicorn -w 2 -k uvicorn.workers.UvicornWorker -b 127.0.0.1:8000 app:app`.
 - Jadikan service dengan *systemd* supaya auto-restart.
-- `.env` (token) & file `*.db` ada di `.gitignore` — jangan di-commit.
+- `.env` (berisi `API_KEY` + `DATABASE_URL`) ada di `.gitignore` — jangan di-commit.
 - Untuk data sungguhan pakai *HTTPS* (`https://` di `VPS_URL`).
-- SQLite cukup untuk skala lab; untuk produksi ganti ke PostgreSQL/MySQL
-  (ubah `get_db()` + placeholder query) — skema tabel sama.
+- Database = Postgres di Supabase; query pakai SQL Postgres biasa (`psycopg`).
+  Mau self-host Postgres sendiri? Cukup ganti `DATABASE_URL`, kode tidak berubah.
 
 == Untuk Lab Smart Absensi
 
 Pola sama: kirim saat kartu ditempel, bukan periodik. Ganti `kind` jadi
 `"absensi"` dan `data` jadi `{"uid": "A1B2C3D4", "tap": 5}`. Server &
-database tidak perlu diubah — kolom `payload` menyimpan JSON apa pun.
+database tidak perlu diubah — kolom `payload` (JSONB) menyimpan JSON apa pun.

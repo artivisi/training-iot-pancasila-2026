@@ -451,6 +451,13 @@ void loop() {
   <p class="disclaimer">Struktur identik — yang berubah hanya makna angka sensor &amp; apa yang diaktuasi. Pompa selalu lewat relay, tidak langsung dari pin ESP32. Prototype dibawa trainer; bukan lab peserta.</p>
 </div>
 
+<!-- Lanjutan: VPS sendiri (FastAPI + Supabase) -->
+<div class="slide">
+  <h2>Lanjutan: Data ke VPS Sendiri</h2>
+  <img src="assets/arsitektur-vps.png" alt="Arsitektur VPS: ESP32 → FastAPI → Supabase Postgres" class="slide-img">
+  <p class="disclaimer">Alternatif Blynk: ESP32 kirim HTTP POST (JSON) ke app <strong>FastAPI</strong> di VPS, yang meng-INSERT ke <strong>Postgres di Supabase</strong> (SQL biasa via psycopg, bukan SDK). Detail di Lampiran C workbook. Materi opsional — Blynk tetap jalur utama lab.</p>
+</div>
+
 <!-- Materi Download -->
 <div class="slide">
   <h2>Materi Download</h2>
@@ -469,7 +476,7 @@ void loop() {
       </ul>
       <h3>Lanjutan: VPS sendiri</h3>
       <ul>
-        <li><a href="server.zip">server.zip</a> (app Python)</li>
+        <li><a href="server.zip">server.zip</a> (FastAPI + Supabase)</li>
         <li><a href="firmware/fire-detector-vps.zip">fire-detector-vps.zip</a></li>
       </ul>
     </div>

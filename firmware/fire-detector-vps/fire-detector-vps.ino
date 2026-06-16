@@ -2,9 +2,9 @@
 // FIRE DETECTOR -> VPS SENDIRI (bukan Blynk)
 // PkM IoT STMIK Tazkia x Universitas Pancasila 2026
 //
-// Versi ini mengirim data sensor ke server Python (Flask) milik sendiri di
-// VPS, lewat HTTP POST (JSON). Server menyimpannya ke database (lihat folder
-// server/). Sensor & wiring sama dengan Lab Fire Detector.
+// Versi ini mengirim data sensor ke server Python (FastAPI) milik sendiri di
+// VPS, lewat HTTP POST (JSON). Server menyimpannya ke database Postgres di
+// Supabase (lihat folder server/). Sensor & wiring sama dengan Lab Fire Detector.
 //
 // Board    : ESP32 DevKit V1
 // Toolchain: Arduino IDE
