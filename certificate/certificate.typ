@@ -196,11 +196,9 @@
     )
 
     #v(1fr)
-    #block(width: 22cm)[
-      #grid(columns: (1fr, 1fr), align: center + horizon,
-        ttd("Trainer", "Endy Muhardin, S.T., M.E.", "STMIK Tazkia · PT ArtiVisi Intermedia"),
-        ttd("Mitra", "Dr. Ir. Iman Paryudi, M.Sc.", "Universitas Pancasila"),
-      )
+    // Lampiran hanya ditandatangani trainer (penyusun materi).
+    #block(width: 8cm)[
+      #ttd("Trainer", "Endy Muhardin, S.T., M.E.", "STMIK Tazkia · PT ArtiVisi Intermedia")
     ]
   ]
 }
