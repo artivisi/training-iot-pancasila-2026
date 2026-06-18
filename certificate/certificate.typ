@@ -15,9 +15,10 @@
 
 // ---- Isi sesuai acara (edit di sini) ----
 #let kegiatan = "Pelatihan Internet of Things (IoT) berbasis ESP32"
-#let kota = "Jakarta"
-#let tanggal = "13 & 16 Juni 2026"
-#let tempat = "Kampus Universitas Pancasila, Jakarta"
+#let tanggal = "13 & 16 Juni 2026"           // tanggal pelaksanaan
+#let tempat = "kampus Universitas Pancasila, Jakarta"
+#let kota-ttd = "Bogor"                       // kota & tanggal penerbitan/ttd
+#let tanggal-ttd = "18 Juni 2026"
 #let nomor-prefix = "PkM-IoT/UP/VI/2026"   // format nomor sertifikat
 
 // ---- Sumber nama peserta ----
@@ -94,7 +95,7 @@
   // dan nama) adalah ruang tanda tangan digital + QR code.
   #set par(spacing: 0.12cm)
   #text(size: 10pt, fill: mute)[#jabatan]
-  #v(2.3cm)
+  #v(2.0cm)
   #text(size: 12pt, weight: "bold")[#nama]
   #line(length: 5.2cm, stroke: 0.6pt + mute)
   #text(size: 9.5pt, fill: mute)[#instansi]
@@ -121,42 +122,39 @@
     #set align(center)
     #header-logo(0.95cm)
 
-    #v(0.05cm)
-    #text(font: script, size: 34pt, weight: "bold", fill: navy)[Sertifikat Pelatihan]
-    #v(-0.05cm)
+    #v(0.03cm)
+    #text(font: script, size: 32pt, weight: "bold", fill: navy)[Sertifikat Pelatihan]
+    #v(-0.08cm)
     #line(length: 6cm, stroke: 0.8pt + orange)
 
-    #v(0.15cm)
+    #v(0.12cm)
     #text(size: 10.5pt, fill: mute)[Dengan hormat diberikan kepada,]
 
-    #v(0.15cm)
-    #text(font: sans, size: 28pt, weight: 800, fill: navy)[#nama]
+    #v(0.1cm)
+    #text(font: sans, size: 26pt, weight: 800, fill: navy)[#nama]
 
-    #v(0.18cm)
-    #text(size: 10.5pt, fill: mute)[Yang Telah Mengikuti Kegiatan :]
-    #v(0.06cm)
+    #v(0.14cm)
+    #text(size: 10.5pt, fill: mute)[Yang telah mengikuti kegiatan:]
+    #v(0.05cm)
     #text(size: 14pt, weight: "bold", fill: navy)[#kegiatan]
 
-    #v(0.16cm)
-    #text(size: 10.5pt, fill: mute)[Yang Diselenggarakan Oleh :]
-    #v(0.06cm)
-    #block(width: 22cm)[
-      #text(size: 10.5pt)[
-        #text(weight: "bold")[STMIK Tazkia] bekerja sama dengan
-        #text(weight: "bold")[Universitas Pancasila], didukung oleh
-        PT ArtiVisi Intermedia. Kegiatan Pengabdian kepada Masyarakat (PkM),
-        meliputi lab Fire Detector (monitoring kualitas udara) dan
-        Smart Absensi berbasis ESP32.
-      ]
-    ]
+    #v(0.12cm)
+    #text(size: 10.5pt, fill: mute)[Yang diselenggarakan atas kerja sama:]
+    #v(0.05cm)
+    #text(size: 12pt, weight: "bold", fill: navy)[STMIK Tazkia, Universitas Pancasila, dan PT ArtiVisi Intermedia]
+    #v(0.05cm)
+    #text(size: 10.5pt, fill: mute)[Dalam rangka kegiatan Pengabdian kepada Masyarakat (PkM)]
+
+    #v(0.12cm)
+    #text(size: 10.5pt, fill: mute)[Pada tanggal #tanggal, bertempat di #tempat]
 
     #v(1fr)
-    #text(size: 10.5pt, fill: mute)[Pada tanggal #tanggal, bertempat di #tempat]
+    #text(size: 10.5pt, fill: mute)[#kota-ttd, #tanggal-ttd]
     #v(0.2cm)
     #block(width: 22cm)[
       #grid(columns: (1fr, 1fr), align: center + horizon,
-        ttd("Pelaksana PkM / Trainer", "Endy Muhardin", "STMIK Tazkia · PT ArtiVisi Intermedia"),
-        ttd("Mengetahui, Mitra", "Iman Paryudi", "Universitas Pancasila"),
+        ttd("Trainer", "Endy Muhardin, S.T., M.E.", "STMIK Tazkia · PT ArtiVisi Intermedia"),
+        ttd("Mitra", "Dr. Ir. Iman Paryudi, M.Sc.", "Universitas Pancasila"),
       )
     ]
   ]
@@ -200,8 +198,8 @@
     #v(1fr)
     #block(width: 22cm)[
       #grid(columns: (1fr, 1fr), align: center + horizon,
-        ttd("Pelaksana PkM / Trainer", "Endy Muhardin", "STMIK Tazkia · PT ArtiVisi Intermedia"),
-        ttd("Mengetahui, Mitra", "Iman Paryudi", "Universitas Pancasila"),
+        ttd("Trainer", "Endy Muhardin, S.T., M.E.", "STMIK Tazkia · PT ArtiVisi Intermedia"),
+        ttd("Mitra", "Dr. Ir. Iman Paryudi, M.Sc.", "Universitas Pancasila"),
       )
     ]
   ]
