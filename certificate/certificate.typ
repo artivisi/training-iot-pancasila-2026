@@ -16,7 +16,7 @@
 // ---- Isi sesuai acara (edit di sini) ----
 #let kegiatan = "Pelatihan Internet of Things (IoT) berbasis ESP32"
 #let kota = "Jakarta"
-#let tanggal = "14 & 16 Juni 2026"
+#let tanggal = "13 & 16 Juni 2026"
 #let tempat = "Kampus Universitas Pancasila, Jakarta"
 #let nomor-prefix = "PkM-IoT/UP/VI/2026"   // format nomor sertifikat
 
@@ -100,6 +100,16 @@
   #text(size: 9.5pt, fill: mute)[#instansi]
 ]
 
+// Header tiga logo (STMIK Tazkia · Universitas Pancasila · ArtiVisi), rata
+// tengah & sejajar secara vertikal. `base` mengatur skala tinggi logo.
+#let header-logo(base) = align(center)[
+  #grid(columns: 3, column-gutter: 0.9cm, align: horizon,
+    image("assets/logo-stmik.svg", height: base),
+    image("assets/logo-pancasila.png", height: base * 1.28),
+    image("assets/logo-artivisi.svg", height: base * 0.7),
+  )
+]
+
 #let cert(no, nama) = {
   ornament
 
@@ -107,11 +117,9 @@
   place(bottom + center, dy: -1.15cm,
     text(size: 8.5pt, fill: mute)[No: #no])
 
-  block(width: 100%, height: 100%, inset: (x: 3.4cm, top: 1.2cm, bottom: 1.2cm))[
+  block(width: 100%, height: 100%, inset: (x: 3.4cm, top: 1.1cm, bottom: 1.2cm))[
     #set align(center)
-    #box(image("assets/logo-stmik.svg", height: 1.0cm))
-    #h(1.0cm)
-    #box(baseline: 0.2cm, image("assets/logo-artivisi.svg", height: 0.68cm))
+    #header-logo(0.95cm)
 
     #v(0.05cm)
     #text(font: script, size: 34pt, weight: "bold", fill: navy)[Sertifikat Pelatihan]
@@ -154,20 +162,13 @@
   ]
 }
 
-// Header logo dipakai di kedua halaman.
-#let header-logo = [
-  #box(image("assets/logo-stmik.svg", height: 1.25cm))
-  #h(1.0cm)
-  #box(baseline: 0.2cm, image("assets/logo-artivisi.svg", height: 0.85cm))
-]
-
 // Halaman 2: lampiran daftar materi (mengikuti gaya "Daftar Unit Kompetensi").
 #let materi(no, nama) = {
   ornament
 
   block(width: 100%, height: 100%, inset: (x: 2.8cm, top: 1.3cm, bottom: 1.3cm))[
     #set align(center)
-    #header-logo
+    #header-logo(1.05cm)
 
     #v(0.25cm)
     #text(size: 20pt, weight: "bold", fill: navy, tracking: 1pt)[DAFTAR MATERI PELATIHAN]
